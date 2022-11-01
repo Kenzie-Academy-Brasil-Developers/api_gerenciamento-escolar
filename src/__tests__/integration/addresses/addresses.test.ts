@@ -2,6 +2,7 @@ import AppDataSource from "../../../data-souce";
 import { DataSource } from "typeorm";
 import request from "supertest";
 import app from "../../../app";
+import { addressTeacher } from "../../mocks";
 
 export let mockedAddressId = "";
 
@@ -22,16 +23,8 @@ describe("/address", () => {
     await connection.destroy();
   });
 
-  const mockedAddress = {
-    district: "Rua Heleodo Pires de camargo",
-    cep: "18150000",
-    number: "67",
-    country: "Brasil",
-    state: "MG",
-  };
-
   test("POST /address - Must be able to register an address", async () => {
-    const response = await request(app).post("/address").send(mockedAddress);
+    const response = await request(app).post("/address").send(addressTeacher);
 
     expect(response.body).toHaveProperty("id");
     expect(response.body).toHaveProperty("district");
@@ -44,7 +37,7 @@ describe("/address", () => {
   });
 
   test("POST /address - iIt should not be possible to register an address that already exists", async () => {
-    const response = await request(app).post("/address").send(mockedAddress);
+    const response = await request(app).post("/address").send(addressTeacher);
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("message");
