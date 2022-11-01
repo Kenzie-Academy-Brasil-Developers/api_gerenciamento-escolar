@@ -22,6 +22,30 @@ export const loginProfessional = {
   password: "12345678",
 };
 
+export const createProfessionalIsNotAdm = {
+  type: "faxineiro",
+  permission: false,
+  name: "Profissional2",
+  cpf: "92839463820",
+  contact: "(00) 0000-0000",
+  email: "profissional2@gmail.com",
+  password: "01234567",
+  id_address: "insira o id",
+};
+
+export const addressProfessionalIsNotAdm = {
+  district: "Rua dos passos",
+  cep: "92639272",
+  number: "20",
+  country: "Brasil",
+  state: "MG",
+};
+
+export const loginProfessionalIsNotAdm = {
+  email: "profissional2@gmail.com",
+  password: "01234567",
+};
+
 export const createTeacher = {
   name: "Professor 1",
   email: "professor1@gmail.com",
