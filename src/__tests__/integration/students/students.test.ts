@@ -2,19 +2,7 @@ import { DataSource, Not } from "typeorm";
 import AppDataSource from "../../../data-souce";
 import request from "supertest";
 import app from "../../../app";
-
-interface IEditUser {
-  name?: string;
-  age?: number;
-  email?: string;
-  isTeacher?: boolean;
-  contact?: string;
-  id_adress?: string;
-
-  id_classroom?: string;
-
-  updatedAt?: Date;
-}
+import { createStudent, loginStudent, updateStudent } from "../../mocks";
 
 describe("Testing the student routes", () => {
   let connection: DataSource;
@@ -32,28 +20,20 @@ describe("Testing the student routes", () => {
   });
 
   test("Should be able to create an student", async () => {
-    const name = "aluno1";
-    const age = 14;
-    const email = "aluno1@gmail.com";
-    const contact = "(00)0000-0000";
-    const id_adress = "";
-    const id_registration = "";
-    const id_classroom = "";
-
-    const studentData = {
+    const {
       name,
       age,
       email,
       contact,
-      id_adress,
+      id_address,
       id_registration,
       id_classroom,
-    };
+    } = createStudent;
 
-    const response = await request(app).post("/students").send(studentData);
+    const response = await request(app).post("/students").send(createStudent);
 
     expect(response.status).toBe(201);
-    expect(response.body).toEqual(
+    expect(response.body.data).toEqual(
       expect.objectContaining({
         id: 1,
         name,
@@ -61,7 +41,7 @@ describe("Testing the student routes", () => {
         email,
         isTeacher: false,
         contact,
-        id_adress,
+        id_address,
         id_registration,
         id_classroom,
         createdAt: Date(),
@@ -83,9 +63,22 @@ describe("Testing the student routes", () => {
     expect(response.status).toBe(200);
   });
 
-  test("Should be able to edit a student", async () => {
-    const response = await request(app).patch("/student/:id").send();
+  test("Should be able to update a student", async () => {
+    const { name, age, email, contact, password } = updateStudent;
+    const response = await request(app)
+      .patch("/student/:id")
+      .send(updateStudent);
 
     expect(response.status).toBe(200);
+    expect(response.body.data).toEqual(
+      expect.objectContaining({ name, age, email, contact, password })
+    );
+  });
+
+  test("Should be able to login as a student", async () => {
+    const response = await await request(app).post("/login").send(loginStudent);
+
+    expect(response.status).toBe(200);
+    expect(response.body.data).toHaveProperty("token");
   });
 });

@@ -11,40 +11,35 @@ import {
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
-import { GradesHistory } from "./gradesHistory.entity";
 import { Professionals } from "./professionals.entity";
+import { SchoolGrades } from "./schoolGrades.entity";
+import { SchoolMaterials } from "./schoolMaterials.entity";
 import { Students } from "./student.entity";
 
 
-@Entity("schoolGrades")
-export class SchoolGrades {
+@Entity("gradesHistory")
+export class GradesHistory {
   find() {
     throw new Error("Method not implemented.");
   }
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 50 })
-  name: string;
+  @ManyToMany(() => SchoolGrades, (sclGrd) => sclGrd.id)
+  schoolGrade: SchoolGrades
 
-  @CreateDateColumn({type: "date"})
-  createdAt: string;
-
-  @UpdateDateColumn({type: "date"})
-  updatedAt: string;
-
-  @ManyToOne(() => ClassRoom, (clsRm) => clsRm.name)
-  nameClass: ClassRoom
+  @ManyToOne(() => Students, (std) => std.schoolGrade)
+  student: Students[]
 
   @OneToOne(() => Professionals, { eager: true })
   @JoinColumn()
   registration: Professionals;
 
   @ManyToOne(() => Students, (std) => std.id)
-  student: Students
+  studentHistory: Students
 
-  @ManyToMany(() => GradesHistory, (sclGrd) => sclGrd.schoolGrade)
-  schoolGrade: SchoolGrades
+  @ManyToMany(() => SchoolMaterials, (mat) => mat.id)
+  grade: SchoolMaterials
 
   constructor() {
     if (!this.id) {
