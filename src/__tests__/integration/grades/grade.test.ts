@@ -32,9 +32,6 @@ describe("/schoolMaterials", () => {
         expect(response.body).toHaveProperty("thirdGrade")
         expect(response.body).toHaveProperty("fourthGrade")
         expect(response.body).toHaveProperty("absences")
-        expect(response.body).toHaveProperty("id_school_grade")
-        expect(response.body.schoole_grade).toHaveProperty("name")
-        expect(response.body.schoole_grade).toHaveProperty("id_student")
         expect(response.status).toBe(201)
      
     });
