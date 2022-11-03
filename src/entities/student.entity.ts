@@ -12,6 +12,7 @@ import {
 import { v4 as uuid } from "uuid";
 import { Address } from "./address.entity";
 import { ClassRoom } from "./classRoom.entity";
+import { GradesHistory } from "./gradesHistory.entity";
 import { Professionals } from "./professionals.entity";
 import { SchoolGrades } from "./schoolGrades.entity";
 import { TeachersRoom } from "./teachersRoom.entity";
@@ -69,6 +70,9 @@ export class Students {
 
   @OneToMany(() => SchoolGrades, (grd) => grd.name)
   schoolGrade: SchoolGrades;
+
+  @OneToMany(() => GradesHistory, (grdHt) => grdHt.student)
+  gradeHistory: GradesHistory[];
 
   constructor() {
     if (!this.id) {

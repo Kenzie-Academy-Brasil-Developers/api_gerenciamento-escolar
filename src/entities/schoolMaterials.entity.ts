@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
 import { v4 as uuid } from "uuid";
+import { GradesHistory } from "./gradesHistory.entity";
 import { SchoolGrades } from "./schoolGrades.entity";
 
 @Entity("schoolMaterials")
@@ -22,8 +23,8 @@ export class SchoolMaterials {
 
 	absences: BigInteger;
 	
-  @ManyToMany(() => SchoolGrades, (schGrd) => schGrd.id)
-  schoolGrade: SchoolGrades;
+  @ManyToMany(() => GradesHistory, (grdHst) => grdHst.grade)
+  history: GradesHistory;
 
   constructor() {
     if (!this.id) {

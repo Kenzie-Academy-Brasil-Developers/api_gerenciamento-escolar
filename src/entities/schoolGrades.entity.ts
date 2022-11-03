@@ -6,10 +6,12 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  ManyToMany
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
+import { GradesHistory } from "./gradesHistory.entity";
 import { Professionals } from "./professionals.entity";
 import { Students } from "./student.entity";
 
@@ -41,7 +43,7 @@ export class SchoolGrades {
   @ManyToOne(() => Students, (std) => std.id)
   student: Students
 
-  @ManyToMany(() => SchoolGrades, (sclGrd) => sclGrd.id)
+  @ManyToMany(() => GradesHistory, (sclGrd) => sclGrd.schoolGrade)
   schoolGrade: SchoolGrades
 
   constructor() {
