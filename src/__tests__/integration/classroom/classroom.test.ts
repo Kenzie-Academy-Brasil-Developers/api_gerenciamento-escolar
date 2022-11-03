@@ -10,6 +10,8 @@ import {
   createTeacher,
   loginTeacher,
   loginProfessionalIsNotAdm,
+  createStudent,
+  createSchoolGrade,
 } from "../../mocks";
 
 describe("/classroom", () => {
@@ -38,21 +40,34 @@ describe("/classroom", () => {
       .post("/login")
       .send(loginProfessional);
 
-    const response = await request(app)
+    const creatStudent = await request(app)
+      .post("/professionals")
+      .send(createStudent)
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
+
+    const createSchGrade = await request(app)
+      .post("/schoolGrade/student")
+      .send(createSchoolGrade)
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
+    createSchoolGrade.id_student = creatStudent.body.data.id;
+
+    const createdClassroom = await request(app)
       .post("/classroom")
       .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
       .send(createClassroom);
+    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
 
-    expect(response.status).toBe(201);
-    expect(response.body.message).toHaveProperty(
+    expect(createdClassroom.status).toBe(201);
+    expect(createdClassroom.body.message).toHaveProperty(
       "classroom created successfully"
     );
-    expect(response.body).toHaveProperty("data");
-    expect(response.body.data).toHaveProperty("name");
-    expect(response.body.data).toHaveProperty("capacity");
-    expect(response.body.data).toHaveProperty("id");
-    expect(response.body.data).toHaveProperty("createdAt");
-    expect(response.body.data).toHaveProperty("updatedAt");
+    expect(createdClassroom.body).toHaveProperty("data");
+    expect(createdClassroom.body.data).toHaveProperty("name");
+    expect(createdClassroom.body.data).toHaveProperty("capacity");
+    expect(createdClassroom.body.data).toHaveProperty("id_schoolGrade");
+    expect(createdClassroom.body.data).toHaveProperty("id");
+    expect(createdClassroom.body.data).toHaveProperty("createdAt");
+    expect(createdClassroom.body.data).toHaveProperty("updatedAt");
   });
 
   test("POST /classroom - not be able to create a classroom without permission", async () => {
@@ -86,10 +101,11 @@ describe("/classroom", () => {
     expect(Array.isArray(response.body.data)).toBe(true);
   });
 
-  test("GET /classroom/:id_teacher/teacher - should be search teatcher's classroom", async () => {
+  test("GET /classroom/:id_teacher/teacher - should be search teacher's classroom", async () => {
     const createProfessorResponse = await request(app)
       .post("/professionals")
       .send(createTeacher);
+
     const loginResponse = await request(app).post("/login").send(loginTeacher);
 
     const response = await request(app)
