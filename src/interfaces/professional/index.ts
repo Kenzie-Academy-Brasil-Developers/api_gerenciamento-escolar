@@ -1,4 +1,5 @@
-export interface IAddressRequest {
+export interface IAddress {
+    id: string
     zipCode: string
     district: string
     city: string
@@ -11,19 +12,21 @@ export interface IProfessionalRequest {
     name: string
     email: string
     password: string
-    isPermission: boolean
+    permission: boolean
 }
 
 export interface IProfessional extends IProfessionalRequest {
     id: string
+    type: string
     name: string
     contact: string
     cpf: string
     email: string
-    isPermission: boolean
+    permission: boolean
     createdAt: Date
     updatedAt: Date
     isActive: true;
+    id_address: IAddress
 }
 
 export interface IProfessionalLogin {

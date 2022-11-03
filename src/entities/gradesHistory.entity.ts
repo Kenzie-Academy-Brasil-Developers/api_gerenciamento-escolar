@@ -6,7 +6,8 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  ManyToMany
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
@@ -22,16 +23,10 @@ export class SchoolGrades {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 50 })
-  name: string;
+  @ManyToMany(() => SchoolGrades, (sclGrd) => sclGrd.id)
+  schoolGrade: SchoolGrades
 
-  @CreateDateColumn({type: "date"})
-  createdAt: string;
-
-  @UpdateDateColumn({type: "date"})
-  updatedAt: string;
-
-  @ManyToOne(() => ClassRoom, (clsRm) => clsRm.name)
+  @ManyToOne(() => ClassRoom, (clsRm) => clsRm.id)
   nameClass: ClassRoom
 
   @OneToOne(() => Professionals, { eager: true })
@@ -40,9 +35,6 @@ export class SchoolGrades {
 
   @ManyToOne(() => Students, (std) => std.id)
   student: Students
-
-  @ManyToMany(() => SchoolGrades, (sclGrd) => sclGrd.id)
-  schoolGrade: SchoolGrades
 
   constructor() {
     if (!this.id) {
