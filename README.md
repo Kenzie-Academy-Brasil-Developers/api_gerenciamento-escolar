@@ -32,7 +32,7 @@ http://gerenciamento-escolar.com/
 
 Diagrama ER da API definindo bem as relações entre as tabelas do banco de dados.  
 
-![DER](https://uploaddeimagens.com.br/images/004/081/692/original/gerenciamento_escolar_XML.drawio.png?1666983262)
+![DER](https://uploaddeimagens.com.br/images/004/088/807/original/gerenciamento_escolar_XML.drawio_%282%29.png?1667484852)
 ---
 
 ## 3. Endpoints
