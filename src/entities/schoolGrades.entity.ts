@@ -5,7 +5,7 @@ import {
   ManyToMany
 } from "typeorm";
 import { v4 as uuid } from "uuid";
-import { Grades } from "./grades.entity";
+import { SchoolMaterials } from "./schoolMaterials.entity";
 
 @Entity("schoolGrades")
 export class SchoolGrades {
@@ -16,10 +16,10 @@ export class SchoolGrades {
   readonly id: string;
 
   @Column({ length: 50 })
-  schoolGrade: string;
+  school_grade: string;
 
-  @ManyToMany(() => Grades, (grade) => grade.schoolGrade)
-  grade: Grades[]
+  @ManyToMany(() => SchoolMaterials, (grade) => grade.schoolGrade)
+  grade: SchoolGrades[]
 
   constructor() {
     if (!this.id) {
