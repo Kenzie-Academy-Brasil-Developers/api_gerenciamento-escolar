@@ -26,7 +26,7 @@ describe("/teacher", () => {
     await connection.destroy();
   });
 
-  const mockedTeacher2 = {
+  const mockedTeacher3 = {
     name: "Professor 3",
     email: "professor3@gmail.com",
     password: "12345678",
@@ -75,7 +75,7 @@ describe("/teacher", () => {
   });
 
   test("GET /teacher - Must be able to fetch every teacher", async () => {
-    await request(app).post("/teacher").send(mockedTeacher2);
+    await request(app).post("/teacher").send(mockedTeacher3);
     const loginResponse = await request(app)
       .post("/login")
       .send(loginProfessional);
