@@ -3,9 +3,11 @@ import {
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
+    OneToMany
   } from "typeorm";
   import { v4 as uuid } from "uuid";
+import { SchoolGrades } from "./schoolGrades.entity";
 
   @Entity("classRoom")
 export class ClassRoom {
@@ -26,6 +28,9 @@ export class ClassRoom {
 
   @UpdateDateColumn({type: "date"})
   updatedAt: string;
+
+  @OneToMany(() => SchoolGrades, (schGrd) => schGrd.id)
+  schoolGrade: SchoolGrades;
 
   
   constructor() {

@@ -44,6 +44,8 @@ export class Professionals {
   @UpdateDateColumn({ type: "date" })
   updatedAt: string;
 
+  
+
   constructor() {
     if (!this.id) {
       this.id = uuid();
