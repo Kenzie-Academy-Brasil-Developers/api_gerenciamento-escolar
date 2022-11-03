@@ -1,14 +1,5 @@
+
 import { Response } from "express";
-
-export class AppError extends Error {
-    statusCode
-
-    constructor(statusCode: number, message: string){
-        super()
-        this.statusCode = statusCode
-        this.message = message
-    }
-}
 
 export const handleError = (err: AppError, res: Response) => {
     const { statusCode, message } = err
@@ -19,3 +10,16 @@ export const handleError = (err: AppError, res: Response) => {
         message
     })
 }
+
+class appError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number = 400) {
+    super();
+
+    this.message = message;
+    this.statusCode = statusCode;
+  }
+}
+
+export { appError };
