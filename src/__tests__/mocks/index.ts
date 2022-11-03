@@ -84,6 +84,7 @@ export const createStudent = {
   email: "aluno1@gmail.com",
   password: "12345678",
   contact: "(00) 0000-0000",
+  id_schoolGrade: "Insira o id",
   id_address: "insira o id",
   id_registration: "insira o id",
   id_classroom: "insira o id",
@@ -140,8 +141,7 @@ export const createSchoolMaterials = {
   secondGrade: 15,
   thirdGrade: 25,
   fourthGrade: null,
-  absences: 4,
-  "id_school_grade": "insira o id",
+  absences: 4
 };
 
 export const updateSchoolMaterials = {
@@ -150,7 +150,6 @@ export const updateSchoolMaterials = {
 };
 
 export const createSchoolGrade = {
-  id: 1,
   name: "1º ano - Ensino Medio",
-  id_student: "insira o id",
+  id_registration: "insira o id"
 };
