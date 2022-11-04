@@ -16,7 +16,7 @@ export class Professionals {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({length: 10})
+  @Column()
   isPermission: boolean;
 
   @Column({ length: 80 })
