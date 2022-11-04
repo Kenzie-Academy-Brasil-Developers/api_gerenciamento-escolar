@@ -1,5 +1,5 @@
 import { DataSource, Not } from "typeorm";
-import AppDataSource from "../../../data-souce";
+import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 import { createStudent, loginStudent, updateStudent } from "../../mocks";
@@ -9,8 +9,8 @@ describe("Testing the student routes", () => {
   let userId = {};
   beforeAll(async () => {
     await AppDataSource.initialize()
-      .then((res) => (connection = res))
-      .catch((err) => {
+      .then((res: any) => (connection = res))
+      .catch((err: any) => {
         console.error("Error during Data Source initialization", err);
       });
   });
