@@ -127,6 +127,7 @@ export const createAddress = {
 export const createClassroom = {
   name: "sala 1",
   capacity: 45,
+  id_schoolGrade: "",
 };
 
 export const updateClassroom = {
