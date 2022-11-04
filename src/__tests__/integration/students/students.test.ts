@@ -6,7 +6,7 @@ import { createStudent, loginStudent, updateStudent } from "../../mocks";
 
 describe("Testing the student routes", () => {
   let connection: DataSource;
-
+  let userId = {};
   beforeAll(async () => {
     await AppDataSource.initialize()
       .then((res) => (connection = res))
@@ -31,7 +31,7 @@ describe("Testing the student routes", () => {
     } = createStudent;
 
     const response = await request(app).post("/students").send(createStudent);
-
+    userId = response;
     expect(response.status).toBe(201);
     expect(response.body.data).toEqual(
       expect.objectContaining({
