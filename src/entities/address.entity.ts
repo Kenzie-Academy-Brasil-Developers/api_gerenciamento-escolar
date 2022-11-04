@@ -20,9 +20,6 @@ export class Address {
   district: string;
 
   @Column()
-  city: string;
-
-  @Column()
   number: string;
 
   @Column({ length: 2})
