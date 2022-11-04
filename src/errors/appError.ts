@@ -1,7 +1,6 @@
-
 import { Response } from "express";
 
-export const handleError = (err: AppError, res: Response) => {
+export const handleError = (err: appError, res: Response) => {
     const { statusCode, message } = err
 
     return res.status(statusCode).json({

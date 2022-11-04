@@ -36,8 +36,7 @@ export class SchoolGrades {
   @ManyToOne(() => ClassRoom, (clsRm) => clsRm.name)
   nameClass: ClassRoom
 
-  @OneToOne(() => Professionals, { eager: true })
-  @JoinColumn()
+  @ManyToOne(() => Professionals)
   registration: Professionals;
 
   @ManyToOne(() => Students, (std) => std.id)

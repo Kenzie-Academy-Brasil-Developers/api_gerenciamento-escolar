@@ -3,8 +3,8 @@ import { v4 as uuid } from "uuid";
 import { GradesHistory } from "./gradesHistory.entity";
 import { SchoolGrades } from "./schoolGrades.entity";
 
-@Entity("schoolMaterials")
-export class SchoolMaterials {
+@Entity("grades")
+export class Grades {
   find() {
     throw new Error("Method not implemented.");
   }
@@ -23,7 +23,7 @@ export class SchoolMaterials {
 
 	absences: BigInteger;
 	
-  @ManyToMany(() => GradesHistory, (grdHst) => grdHst.grade)
+  @ManyToMany(() => GradesHistory, (grdHst) => grdHst.id)
   history: GradesHistory;
 
   constructor() {

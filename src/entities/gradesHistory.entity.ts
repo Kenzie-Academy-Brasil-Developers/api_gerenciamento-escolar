@@ -13,7 +13,6 @@ import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
 import { Professionals } from "./professionals.entity";
 import { SchoolGrades } from "./schoolGrades.entity";
-import { SchoolMaterials } from "./schoolMaterials.entity";
 import { Students } from "./student.entity";
 
 
@@ -38,8 +37,8 @@ export class GradesHistory {
   @ManyToOne(() => Students, (std) => std.id)
   studentHistory: Students
 
-  @ManyToMany(() => SchoolMaterials, (mat) => mat.id)
-  grade: SchoolMaterials
+  @ManyToMany(() => SchoolGrades, (mat) => mat.id)
+  grade: SchoolGrades
 
   constructor() {
     if (!this.id) {
