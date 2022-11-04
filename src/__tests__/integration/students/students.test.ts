@@ -1,16 +1,16 @@
 import { DataSource, Not } from "typeorm";
-import AppDataSource from "../../../data-souce";
+import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 import { createStudent, loginStudent, updateStudent } from "../../mocks";
 
 describe("Testing the student routes", () => {
   let connection: DataSource;
-
+  let userId = {};
   beforeAll(async () => {
     await AppDataSource.initialize()
-      .then((res) => (connection = res))
-      .catch((err) => {
+      .then((res: any) => (connection = res))
+      .catch((err: any) => {
         console.error("Error during Data Source initialization", err);
       });
   });
@@ -31,7 +31,7 @@ describe("Testing the student routes", () => {
     } = createStudent;
 
     const response = await request(app).post("/students").send(createStudent);
-
+    userId = response;
     expect(response.status).toBe(201);
     expect(response.body.data).toEqual(
       expect.objectContaining({
