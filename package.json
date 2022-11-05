@@ -5,6 +5,9 @@
   "repository": "git@github.com:Kenzie-Academy-Brasil-Developers/api_gerenciamento-escolar.git",
   "author": "VictrCruz312 <motoggb979@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "18.0.0"
+  },
   "scripts": {
     "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
     "build": "tsc",
