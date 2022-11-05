@@ -1,8 +1,10 @@
-import AppDataSource from "../../../data-souce";
+import AppDataSource from "../../../data-source";
 import { DataSource } from "typeorm";
 import request from "supertest";
 import app from "../../../app";
 import {
+  addressProfessional,
+  addressProfessionalIsNotAdm,
   createProfessional,
   createProfessionalIsNotAdm,
   createSchoolGrade,
@@ -28,11 +30,18 @@ describe("/address", () => {
   });
 
   test("Must be able to create a new school grade", async () => {
-    await request(app).post("/professionals").send(createProfessional);
+    const address = await request(app)
+      .post("/address")
+      .send(addressProfessional);
+    createProfessional.id_address = address.body.data.id;
+    const createProfessionalAdm = await request(app)
+      .post("/professionals")
+      .send(createProfessional);
     const loginProfessionalAdm = await request(app)
-      .post("/professionals/login")
+      .post("/login")
       .send(loginProfessional);
 
+    createSchoolGrade.id_registration = createProfessionalAdm.body.data.id;
     const response = await request(app)
       .post("/schoolGrade")
       .set("Authorization", ` Bearer ${loginProfessionalAdm.body.token}`)
@@ -47,10 +56,18 @@ describe("/address", () => {
     expect(response.body.data).toHaveProperty("id");
   });
   test("Must not be able to create a new school grade with the same name", async () => {
-    await request(app).post("/professionals").send(createProfessional);
+    const address = await request(app)
+      .post("/address")
+      .send(addressProfessional);
+    createProfessional.id_address = address.body.data.id;
+    const createProfessionalAdm = await request(app)
+      .post("/professionals")
+      .send(createProfessional);
     const loginProfessionalAdm = await request(app)
       .post("/professionals/login")
       .send(loginProfessional);
+
+    createSchoolGrade.id_registration = createProfessionalAdm.body.data.id;
 
     const response = await request(app)
       .post("/schoolGrade")
@@ -62,10 +79,16 @@ describe("/address", () => {
   });
 
   test("Must not be able to create a new school grade without autentication", async () => {
-    await request(app).post("/professionals").send(createProfessional);
-    const loginProfessionalAdm = await request(app)
-      .post("/professionals/login")
-      .send(loginProfessional);
+    const address = await request(app)
+      .post("/address")
+      .send(addressProfessional);
+    createProfessional.id_address = address.body.data.id;
+    const createProfessionalAdm = await request(app)
+      .post("/professionals")
+      .send(createProfessional);
+    await request(app).post("/professionals/login").send(loginProfessional);
+
+    createSchoolGrade.id_registration = createProfessionalAdm.body.data.id;
 
     const response = await request(app)
       .post("/schoolGrade")
@@ -76,10 +99,18 @@ describe("/address", () => {
   });
 
   test("Must not be able to create a new school grade without adm permission", async () => {
-    await request(app).post("/professionals").send(createProfessionalIsNotAdm);
+    const address = await request(app)
+      .post("/address")
+      .send(addressProfessionalIsNotAdm);
+    createProfessionalIsNotAdm.id_address = address.body.data.id;
+    const professionalIsNotAdm = await request(app)
+      .post("/professionals")
+      .send(createProfessionalIsNotAdm);
     const professionalIsNotAdmLogin = await request(app)
       .post("/professionals/login")
       .send(loginProfessionalIsNotAdm);
+
+    createSchoolGrade.id_registration = professionalIsNotAdm.body.data.id;
 
     const response = await request(app)
       .post("/schoolGrade")
