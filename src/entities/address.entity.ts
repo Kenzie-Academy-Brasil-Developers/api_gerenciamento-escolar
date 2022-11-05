@@ -14,13 +14,10 @@ export class Address {
   readonly id: string;  
 
   @Column({length: 8})
-  zipCode: string;
+  cep: string;
 
   @Column()
   district: string;
-
-  @Column()
-  city: string;
 
   @Column()
   number: string;
