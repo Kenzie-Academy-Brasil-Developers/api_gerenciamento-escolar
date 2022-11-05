@@ -22,7 +22,7 @@ Visão geral do projeto, um pouco das tecnologias usadas.
 - [Docker](https://www.docker.com/)
 
 A URL base da aplicação:
-http://gerenciamento-escolar.com/
+https://api-gerenciamento-escolar.herokuapp.com
 
 ---
 
@@ -32,7 +32,7 @@ http://gerenciamento-escolar.com/
 
 Diagrama ER da API definindo bem as relações entre as tabelas do banco de dados.  
 
-![DER](https://uploaddeimagens.com.br/images/004/088/807/original/gerenciamento_escolar_XML.drawio_%282%29.png?1667484852)
+![DER](https://uploaddeimagens.com.br/images/004/091/971/full/gerenciamento_escolar_XML.drawio_%283%29.png?1667655871)
 ---
 
 ## 3. Endpoints
