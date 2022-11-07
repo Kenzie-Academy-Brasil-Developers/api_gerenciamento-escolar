@@ -7,7 +7,8 @@ import {
   CreateDateColumn,
   OneToOne,
   JoinColumn,
-  ManyToMany
+  ManyToMany,
+  OneToMany
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
