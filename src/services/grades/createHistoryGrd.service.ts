@@ -9,21 +9,28 @@ const histGrdCreateService = async (data: GradesHistory) => {
   const { schoolGrade, student, grade } = data;
 
   const stdRepository = AppDataSource.getRepository(Students);
+  const findStdt = await stdRepository.find();
+
   const grdRepository = AppDataSource.getRepository(Grades);
+
   const schlGrdRepository = AppDataSource.getRepository(SchoolGrades);
+  const newSchGr = await schlGrdRepository.findOneBy({
+    id: data.schoolGrade
+  });
+
+  if (!newSchGr) {
+    throw new appError("SchoolGrade not found", 404);
+  }
+
   const grdHstRepository = AppDataSource.getRepository(GradesHistory);
   const findHistory = await grdRepository.find();
 
   const newGrades = grdRepository.create(grade);
   await grdRepository.save(newGrades);
 
-  const existGrade = findHistory.find((grd) => grd.school_subject === data.grade.school_subject)
-  if(existGrade){
-    throw new appError("Grade's exists", 404)
-  };
- 
+  
   const newHistory = new GradesHistory();
-  newHistory.schoolGrade = schoolGrade,
+  newHistory.schoolGrade = newSchGr,
   newHistory.student = student,
   newHistory.grade = newGrades;
 

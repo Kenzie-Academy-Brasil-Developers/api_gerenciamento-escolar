@@ -5,7 +5,6 @@ import { appError } from "../../errors/AppError";
 
 const gradeUpdateService = async (
   data: Grades,
-  schlGrd: SchoolGrades,
   id: string
 ) => {
   const grdRepository = AppDataSource.getRepository(Grades);
@@ -14,22 +13,11 @@ const gradeUpdateService = async (
   const returnGrade = await grdRepository.findOneBy({
     id,
   });
-  const returnschlGrd = await schlGrdRepository.findOneBy({
-    id,
-  });
 
   if (!returnGrade) {
     throw new appError("Grade not found", 404);
   }
-  if (!returnschlGrd) {
-    throw new appError("SchoolGrde not found", 404);
-  }
-
-  await schlGrdRepository.save({
-    id: schlGrd.id ? schlGrd.id : returnschlGrd.id,
-  });
-
-  
+    
   await grdRepository.save({
     id,
     school_subject: data.school_subject ? data.school_subject : returnGrade.school_subject,

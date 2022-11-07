@@ -22,18 +22,15 @@ export class GradesHistory {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @ManyToMany(() => SchoolGrades, (sclGrd) => sclGrd.id)
+  @ManyToOne(() => SchoolGrades, (sclGrd) => sclGrd.id, { eager: true })
   schoolGrade: SchoolGrades
-
-  @ManyToOne(() => Students, (std) => std.schoolGrade)
-  student: Students[]
 
   @OneToOne(() => Professionals, { eager: true })
   @JoinColumn()
   registration: Professionals;
 
   @ManyToOne(() => Students, (std) => std.id)
-  studentHistory: Students
+  student: Students
 
   @ManyToOne(() => Grades, (mat) => mat.id, { eager: true })
   grade: Grades

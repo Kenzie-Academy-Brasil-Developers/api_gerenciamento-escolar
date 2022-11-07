@@ -8,7 +8,6 @@ import {
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { GradesHistory } from "./gradesHistory.entity";
-import { SchoolGrades } from "./schoolGrades.entity";
 
 @Entity("grades")
 export class Grades {
@@ -22,19 +21,19 @@ export class Grades {
   school_subject: string;
 
   @Column()
-  firstGrade: ;
+  firstGrade: number;
 
   @Column()
-  secondGrade: BigInteger;
+  secondGrade: number;
 
   @Column()
-  thirdGrade: BigInteger;
+  thirdGrade: number;
 
   @Column()
-  fourthGrade: BigInteger;
+  fourthGrade: number;
 
   @Column()
-  absences: BigInteger;
+  absences: number;
 
   @OneToMany(() => GradesHistory, (grdHst) => grdHst.grade)
   grade: GradesHistory;
