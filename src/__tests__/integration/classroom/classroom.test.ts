@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../../app";
 import { DataSource } from "typeorm";
-import AppDataSource from "../../../data-souce";
+import AppDataSource from "../../../data-source";
 import {
   createProfessional,
   createProfessionalIsNotAdm,
@@ -39,10 +39,10 @@ describe("/classroom", () => {
       .post("/address")
       .send(addressProfessional);
 
+    createProfessional.id_address = adressResponse.body.data.id;
     const createDirectorResponse = await request(app)
       .post("/professionals")
       .send(createProfessional);
-    createProfessional.id_address = adressResponse.body.data.id;
 
     const directorLoginResponse = await request(app)
       .post("/login")
@@ -51,31 +51,28 @@ describe("/classroom", () => {
     const addressStudentResponse = await request(app)
       .post("/address")
       .send(addressStudent);
-    createSchoolGrade.id_registration = createDirectorResponse.body.data.id;
+
+    createSchoolGrade.id_registration = createDirectorResponse.body.id;
     const createSchGrade = await request(app)
       .post("/schoolGrade")
       .send(createSchoolGrade)
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
-    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
+      .set("Authorization", `Bearer ${directorLoginResponse.body.token}`);
+
+    createClassroom.id_registration = createSchGrade.body.id;
     const createdClassroomResponse = await request(app)
       .post("/classroom")
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
+      .set("Authorization", `Bearer ${directorLoginResponse.body.token}`)
       .send(createClassroom);
-    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
+
+    createStudent.id_address = addressStudentResponse.body.id;
+    createStudent.id_schoolGrade = createSchGrade.body.id;
+    createStudent.id_classroom = createdClassroomResponse.body.id;
+    createStudent.id_registration = createDirectorResponse.body.id;
 
     const creatStudent = await request(app)
       .post("/professionals")
       .send(createStudent)
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
-    createStudent.id_address = addressStudentResponse.body.data.id;
-    createStudent.id_schoolGrade = createSchGrade.body.data.id;
-    createStudent.id_classroom = createdClassroomResponse.body.data.id;
-    createStudent.id_registration = createDirectorResponse.body.data.id;
-
-    const creatStudent = await request(app)
-      .post("/professionals")
-      .send(createStudent)
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
+      .set("Authorization", `Bearer ${directorLoginResponse.body.token}`);
 
     expect(createdClassroomResponse.status).toBe(201);
     expect(createdClassroomResponse.body.message).toHaveProperty(
@@ -84,7 +81,7 @@ describe("/classroom", () => {
     expect(createdClassroomResponse.body).toHaveProperty("data");
     expect(createdClassroomResponse.body.data).toHaveProperty("name");
     expect(createdClassroomResponse.body.data).toHaveProperty("capacity");
-    expect(createdClassroomResponse.body.data).toHaveProperty("id_schoolGrade");
+    expect(createdClassroomResponse.body.data).toHaveProperty("schoolGrade");
     expect(createdClassroomResponse.body.data).toHaveProperty("id");
     expect(createdClassroomResponse.body.data).toHaveProperty("createdAt");
     expect(createdClassroomResponse.body.data).toHaveProperty("updatedAt");
@@ -121,12 +118,11 @@ describe("/classroom", () => {
       .send(createSchoolGrade)
       .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
 
-    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
+    createClassroom.id_registration = createSchGrade.body.data.id;
     const createdClassroomResponse = await request(app)
       .post("/classroom")
       .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
       .send(createClassroom);
-    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
 
     createStudent.id_address = addressStudentResponse.body.data.id;
     createStudent.id_schoolGrade = createSchGrade.body.data.id;
@@ -267,12 +263,11 @@ describe("/classroom", () => {
       .send(createSchoolGrade)
       .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`);
 
-    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
+    createClassroom.id_registration = createSchGrade.body.data.id;
     const createdClassroomResponse = await request(app)
       .post("/classroom")
       .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`)
       .send(createClassroom);
-    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
 
     const updateClassroom = await request(app).get("/classroom");
 

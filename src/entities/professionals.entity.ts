@@ -8,7 +8,7 @@ import {
   OneToOne,
   JoinColumn,
 } from "typeorm";
-import { v4 as uuid } from "uuid";
+
 import { Address } from "./address.entity";
 
 @Entity("professionals")
@@ -53,10 +53,4 @@ export class Professionals {
   @OneToOne(() => Address, { eager: true })
   @JoinColumn()
   id_address: Address;
-
-  constructor() {
-    if (!this.id) {
-      this.id = uuid();
-    }
-  }
 }
