@@ -1,6 +1,6 @@
 import AppDataSource from "../../data-source";
 import { Grades } from "../../entities/grades.entity";
-import { appError } from "../../errors/AppError";
+import { appError } from "../../errors/appError";
 
 const grdDeleteService = async (id: string) => {
   const stdRepository = AppDataSource.getRepository(Grades);

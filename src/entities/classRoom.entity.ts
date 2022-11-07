@@ -23,11 +23,11 @@ export class ClassRoom {
   @Column()
   capacity: number;
 
-  @CreateDateColumn({ type: "date" })
-  createdAt: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: "date" })
-  updatedAt: string;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @OneToMany(() => SchoolGrades, (schGrd) => schGrd.id)
   schoolGrade: SchoolGrades;
