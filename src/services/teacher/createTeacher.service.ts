@@ -1,3 +1,4 @@
+import { hashSync } from "bcrypt";
 import AppDataSource from "../../data-source";
 import { Professionals } from "../../entities/professionals.entity";
 import { Students } from "../../entities/student.entity";
@@ -45,10 +46,12 @@ const createTeacherService = async (data: Teachers) => {
     throw new appError("email is already exists", 400);
   }
 
+  const hashedPassword = hashSync(password, 10);
+
   const newTeacher = teacherRepository.create({
     name,
     email,
-    password,
+    password: hashedPassword,
     isTeacher,
     id_address,
     id_registration,

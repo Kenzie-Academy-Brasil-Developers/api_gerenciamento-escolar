@@ -2,7 +2,7 @@ import request from "supertest";
 import { DataSource } from "typeorm";
 import app from "../../../app";
 import AppDataSource from "../../../data-source";
-import { createProfessional } from "../../mocks";
+import { addressProfessional, createProfessional } from "../../mocks";
 
 describe("/professionals", () => {
   let connection: DataSource;
@@ -22,9 +22,16 @@ describe("/professionals", () => {
   });
 
   test("POST /professionals - Must be able to register a professional ", async () => {
+    const responseAddress = await request(app)
+      .post("/address")
+      .send(addressProfessional);
+
     const response = await request(app)
       .post("/professionals")
-      .send(createProfessional);
+      .send({
+        ...createProfessional,
+        id_address: responseAddress.body.data.id,
+      });
 
     expect(response.body.data).toHaveProperty("id");
     expect(response.body.data).toHaveProperty("name");
