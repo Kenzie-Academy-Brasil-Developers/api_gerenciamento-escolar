@@ -1,27 +1,16 @@
-export interface IschoolGrade {
-	id: string,
-	name: string,
-	createAt: Date,
-	updateAt: Date,
-	nameClass?: string,
-	registration?: string,
-	student?: string,
-	schoolGrade: IGradesHistory,
-}
+import { IStudent } from "../student"
 
-export interface IGradesHistory {
-	schoolGrade: IschoolGrade
+export interface IGradesHistoryRequest {
+	schoolGrade?: string
 	student?: string
-	grade: IGrades
-
+	grade: string[]
 }
 
-export interface IGrades {
-    id: string;
-    school_subject: string;
-	firstGrade: BigInteger;
-	secondGrade: BigInteger;
-	thirdGrade: BigInteger;
-	fourthGrade: BigInteger;
-	absences: BigInteger;
+export interface IHistoryUpdate {
+	school_subject?: string
+	firstGrade?: number
+	secondGrade?: number
+	thirdGrade?: number
+	fourthGrade?: number
+	absences?: number
 }

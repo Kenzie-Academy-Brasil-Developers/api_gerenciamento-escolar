@@ -1,39 +1,38 @@
 import AppDataSource from "../../data-source";
-import { Grades } from "../../entities/grades.entity";
-import { SchoolGrades } from "../../entities/schoolGrades.entity";
+import { Students } from "../../entities/student.entity";
 import { appError } from "../../errors/AppError";
+import { IHistoryUpdate } from "../../interfaces/schoolGrades";
 
 const gradeUpdateService = async (
-  data: Grades,
+  data: IHistoryUpdate,
   id: string
 ) => {
-  const grdRepository = AppDataSource.getRepository(Grades);
-  const schlGrdRepository = AppDataSource.getRepository(SchoolGrades);
+  const studentRepository = AppDataSource.getRepository(Students);
 
-  const returnGrade = await grdRepository.findOneBy({
+  const returnStd = await studentRepository.findOneBy({
     id,
   });
 
-  if (!returnGrade) {
-    throw new appError("Grade not found", 404);
+  if (!returnStd) {
+    throw new appError("Student not found", 404);
   }
     
-  await grdRepository.save({
+  await studentRepository.save({
     id,
-    school_subject: data.school_subject ? data.school_subject : returnGrade.school_subject,
-    firstGrade: data.firstGrade ? data.firstGrade : returnGrade.firstGrade,
-    secondGrade: data.secondGrade ? data.secondGrade : returnGrade.secondGrade,
-    thirdGrade: data.thirdGrade ? data.thirdGrade : returnGrade.thirdGrade,
-    fourthGrade: data.fourthGrade ? data.fourthGrade : returnGrade.fourthGrade,
-    absences: data.absences ? data.absences : returnGrade.absences,
+    school_subject: data.school_subject ? data.school_subject : returnStd.gradeHistory.grade.school_subject,
+    firstGrade: data.firstGrade ? data.firstGrade : returnStd.gradeHistory.grade.firstGrade,
+    secondGrade: data.secondGrade ? data.secondGrade : returnStd.gradeHistory.grade.secondGrade,
+    thirdGrade: data.thirdGrade ? data.thirdGrade : returnStd.gradeHistory.grade.thirdGrade,
+    fourthGrade: data.fourthGrade ? data.fourthGrade : returnStd.gradeHistory.grade.fourthGrade,
+    absences: data.absences ? data.absences : returnStd.gradeHistory.grade.absences,
   });
 
-  const resultGrade = await grdRepository.findOneBy({
+  const resultStd = await studentRepository.findOneBy({
     id,
   });
 
   //console.log(returnGrade)
-  return resultGrade!;
+  return resultStd!;
 };
 
 export default gradeUpdateService;

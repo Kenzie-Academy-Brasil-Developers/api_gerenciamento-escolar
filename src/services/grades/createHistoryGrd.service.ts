@@ -4,23 +4,28 @@ import { GradesHistory } from "../../entities/gradesHistory.entity";
 import { SchoolGrades } from "../../entities/schoolGrades.entity";
 import { Students } from "../../entities/student.entity";
 import { appError } from "../../errors/AppError";
+import { IGradesHistoryRequest } from "../../interfaces/schoolGrades";
 
-const histGrdCreateService = async (data: GradesHistory) => {
+const histGrdCreateService = async (data: IGradesHistoryRequest) => {
   const { schoolGrade, student, grade } = data;
-
-  const stdRepository = AppDataSource.getRepository(Students);
-  const findStdt = await stdRepository.find();
-
-  const grdRepository = AppDataSource.getRepository(Grades);
-
+  
   const schlGrdRepository = AppDataSource.getRepository(SchoolGrades);
   const newSchGr = await schlGrdRepository.findOneBy({
-    id: data.schoolGrade
+    id: schoolGrade
   });
-
   if (!newSchGr) {
     throw new appError("SchoolGrade not found", 404);
   }
+
+  const stdRepository = AppDataSource.getRepository(Students);
+  const findStdt = await stdRepository.findOneBy({
+    id: student
+  });
+  if(!findStdt){
+    throw new appError("Not found student", 400)
+  }
+
+  const grdRepository = AppDataSource.getRepository(Grades);
 
   const grdHstRepository = AppDataSource.getRepository(GradesHistory);
   const findHistory = await grdRepository.find();
@@ -31,7 +36,7 @@ const histGrdCreateService = async (data: GradesHistory) => {
   
   const newHistory = new GradesHistory();
   newHistory.schoolGrade = newSchGr,
-  newHistory.student = student,
+  newHistory.student = findStdt,
   newHistory.grade = newGrades;
 
   grdHstRepository.create(newHistory);
