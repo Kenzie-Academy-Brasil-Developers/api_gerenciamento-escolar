@@ -1,4 +1,4 @@
-import { NextFunction, Request } from "express";
+import { NextFunction, Request, Response } from "express";
 import AppDataSource from "../data-source";
 import { Professionals } from "../entities/professionals.entity";
 import { appError } from "../errors/appError";
