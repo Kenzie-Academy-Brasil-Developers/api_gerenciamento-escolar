@@ -37,21 +37,21 @@ describe("/teacher", () => {
   test("POST /teacher - Must be able to register a teacher", async () => {
     const response = await request(app).post("/teacher").send(createTeacher);
 
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("name");
-    expect(response.body).toHaveProperty("email");
-    expect(response.body).toHaveProperty("isTeacher");
-    expect(response.body).toHaveProperty("id_address");
-    expect(response.body).toHaveProperty("id_registration");
-    expect(response.body).toHaveProperty("createdAt");
-    expect(response.body).toHaveProperty("updatedAt");
-    expect(response.body).toHaveProperty("isActive");
-    expect(response.body).not.toHaveProperty("password");
+    expect(response.body.data).toHaveProperty("id");
+    expect(response.body.data).toHaveProperty("name");
+    expect(response.body.data).toHaveProperty("email");
+    expect(response.body.data).toHaveProperty("isTeacher");
+    expect(response.body.data).toHaveProperty("id_address");
+    expect(response.body.data).toHaveProperty("id_registration");
+    expect(response.body.data).toHaveProperty("createdAt");
+    expect(response.body.data).toHaveProperty("updatedAt");
+    expect(response.body.data).toHaveProperty("isActive");
+    expect(response.body.data).not.toHaveProperty("password");
 
-    expect(response.body.name).toEqual("Professor 1");
-    expect(response.body.email).toEqual("professor1@gmail.com");
-    expect(response.body.isTeacher).toEqual(true);
-    expect(response.body.isActive).toEqual(true);
+    expect(response.body.data.name).toEqual("Professor 1");
+    expect(response.body.data.email).toEqual("professor1@gmail.com");
+    expect(response.body.data.isTeacher).toEqual(true);
+    expect(response.body.data.isActive).toEqual(true);
     expect(response.status).toBe(201);
   });
 

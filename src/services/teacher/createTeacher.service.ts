@@ -1,5 +1,6 @@
 import AppDataSource from "../../data-source";
 import { Professionals } from "../../entities/professionals.entity";
+import { Students } from "../../entities/student.entity";
 import { Teachers } from "../../entities/teachers.entity";
 import { appError } from "../../errors/appError";
 
@@ -18,6 +19,15 @@ const createTeacherService = async (data: Teachers) => {
 
   const teacherRepository = AppDataSource.getRepository(Teachers);
   const professionalRepository = AppDataSource.getRepository(Professionals);
+  const studentRepository = AppDataSource.getRepository(Students);
+
+  const studentsAlreadyExists = await studentRepository.findOneBy({
+    email: email,
+  });
+
+  if (studentsAlreadyExists) {
+    throw new appError("email is already exists", 400);
+  }
 
   const professionalAlreadyExists = await professionalRepository.findOneBy({
     email: email,
