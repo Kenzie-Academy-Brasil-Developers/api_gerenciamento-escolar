@@ -58,10 +58,4 @@ export class Professionals {
   @OneToOne(() => Address, { eager: true })
   @JoinColumn()
   id_address: Address;
-
-  constructor() {
-    if (!this.id) {
-      this.id = uuid();
-    }
-  }
 }
