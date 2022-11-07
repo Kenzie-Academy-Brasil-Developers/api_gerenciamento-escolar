@@ -7,7 +7,8 @@ import {
   CreateDateColumn,
   OneToOne,
   JoinColumn,
-  ManyToMany
+  ManyToMany,
+  OneToMany
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
@@ -43,12 +44,12 @@ export class SchoolGrades {
   @ManyToOne(() => Students, (std) => std.id)
   student: Students
 
-  @ManyToMany(() => GradesHistory, (sclGrd) => sclGrd.schoolGrade)
-  schoolGrade: SchoolGrades
+  @OneToMany(() => GradesHistory, (sclGrd) => sclGrd.schoolGrade)
+  schoolGrade: GradesHistory
 
   constructor() {
     if (!this.id) {
-      this.id = uuid();
+        this.id = uuid();
     }
   }
 }

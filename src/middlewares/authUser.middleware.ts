@@ -25,8 +25,7 @@ export const authUser = (
           message: "Invalid token",
         });
       }
-      //Comentado pois ainda precisamos criar os services e controllers que geram o token
-      // request.user = { isAdm: decoded.isAdm, id: decoded.sub };
+      request.body.decodifiedToken = { email: decoded.email, id: decoded.sub };
 
       next();
     }

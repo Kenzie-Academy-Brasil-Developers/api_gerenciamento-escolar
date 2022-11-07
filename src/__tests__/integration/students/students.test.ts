@@ -2,11 +2,21 @@ import { DataSource, Not } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { createStudent, loginStudent, updateStudent } from "../../mocks";
+import {
+  createStudent,
+  loginStudent,
+  updateStudent,
+  addressStudent,
+  createProfessional,
+  createSchoolGrade,
+  createClassroom,
+} from "../../mocks";
+import { response } from "express";
 
-describe("Testing the student routes", () => {
+describe("Testing the student routes", async () => {
   let connection: DataSource;
   let userId = {};
+
   beforeAll(async () => {
     await AppDataSource.initialize()
       .then((res: any) => (connection = res))
@@ -19,6 +29,25 @@ describe("Testing the student routes", () => {
     await connection.destroy();
   });
 
+  const responseAddress = await request(app)
+    .post("/address")
+    .send(addressStudent);
+  const responseProfessional = await request(app)
+    .post("/professionals")
+    .send(createProfessional);
+
+  const responseSchoolGrade = await request(app)
+    .post("/schoolGrade")
+    .send(createSchoolGrade);
+
+  const classRoom = {
+    ...createClassroom,
+    id_registration: responseSchoolGrade.body.data.id,
+  };
+
+  const responseClassRoom = await request(app)
+    .post("/classroom")
+    .send(classRoom);
   test("Should be able to create an student", async () => {
     const {
       name,
@@ -30,7 +59,14 @@ describe("Testing the student routes", () => {
       id_classroom,
     } = createStudent;
 
-    const response = await request(app).post("/students").send(createStudent);
+    const response = await request(app)
+      .post("/students")
+      .send({
+        ...createStudent,
+        id_address: responseAddress.body.data.id,
+        id_registration: responseProfessional.body.data.id,
+        id_classroom: responseClassRoom.body.data.id,
+      });
     userId = response;
     expect(response.status).toBe(201);
     expect(response.body.data).toEqual(

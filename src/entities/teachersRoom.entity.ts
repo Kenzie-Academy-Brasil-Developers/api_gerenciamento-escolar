@@ -14,7 +14,6 @@ import { Teachers } from "./teachers.entity";
 
 @Entity("teachersRoom")
 export class TeachersRoom {
-  teacher: any;
   find() {
     throw new Error("Method not implemented.");
   }
@@ -34,7 +33,7 @@ export class TeachersRoom {
   updatedAt: string;
 
   @ManyToOne(() => Teachers, (tea) => tea.id)
-  eacher: Teachers;
+  teacher: string;
 
   @OneToOne(() => ClassRoom, { eager: true })
   @JoinColumn()

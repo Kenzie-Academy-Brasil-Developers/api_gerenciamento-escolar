@@ -229,37 +229,15 @@ describe("/teacher", () => {
     expect(response.status).toBe(400);
   });
 
-  test("PATCH /teacher/:id - Should not be able to do teacher update with another teacher's token", async () => {
-    const newValues = { name: "Joana Brito", email: "joanabrito@mail.com" };
-
-    const teacherPermissionLoginResponse = await request(app)
-      .post("/login")
-      .send(loginProfessionalIsNotAdm);
-    await request(app).post("/login").send(loginProfessional);
-
-    const token = `Bearer ${teacherPermissionLoginResponse.body.data}`;
-
-    const teacherTobeUpdateRequest = await request(app)
-      .get("/teacher")
-      .set("Authorization", token);
-    const teacherTobeUpdateId = teacherTobeUpdateRequest.body.data[0].id;
-
-    const response = await request(app)
-      .patch(`/teacher/${teacherTobeUpdateId}`)
-      .set("Authorization", token)
-      .send(newValues);
-
-    expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty("message");
-  });
-
   test("PATCH /teacher/:id - Should not be able to do Teacher Update without token or with invalid token ", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(loginProfessional);
+
     const teacherTobeUpdate = await request(app)
       .get("/teacher")
       .set("Authorization", `Bearer ${adminLoginResponse.body.data}`);
+
     const response = await request(app).patch(
       `/teacher/${teacherTobeUpdate.body.data[0].id}`
     );
