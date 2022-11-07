@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../../app";
 import { DataSource } from "typeorm";
-import AppDataSource from "../../../data-source";
+import AppDataSource from "../../../data-souce";
 import {
   createProfessional,
   createProfessionalIsNotAdm,
@@ -61,6 +61,12 @@ describe("/classroom", () => {
       .post("/classroom")
       .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
       .send(createClassroom);
+    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
+
+    const creatStudent = await request(app)
+      .post("/professionals")
+      .send(createStudent)
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
     createStudent.id_address = addressStudentResponse.body.data.id;
     createStudent.id_schoolGrade = createSchGrade.body.data.id;
     createStudent.id_classroom = createdClassroomResponse.body.data.id;
@@ -120,6 +126,7 @@ describe("/classroom", () => {
       .post("/classroom")
       .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
       .send(createClassroom);
+    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
 
     createStudent.id_address = addressStudentResponse.body.data.id;
     createStudent.id_schoolGrade = createSchGrade.body.data.id;
@@ -265,6 +272,7 @@ describe("/classroom", () => {
       .post("/classroom")
       .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`)
       .send(createClassroom);
+    createClassroom.id_schoolGrade = createSchGrade.body.data.id;
 
     const updateClassroom = await request(app).get("/classroom");
 

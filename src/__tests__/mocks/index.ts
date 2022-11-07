@@ -127,7 +127,7 @@ export const createAddress = {
 export const createClassroom = {
   name: "sala 1",
   capacity: 45,
-  id_schoolGrade: "",
+  id_registration: "insira o id",
 };
 
 export const updateClassroom = {
@@ -136,13 +136,12 @@ export const updateClassroom = {
 };
 
 export const createSchoolMaterials = {
-
   school_subject: "Matematica",
   firstGrade: 21,
   secondGrade: 15,
   thirdGrade: 25,
   fourthGrade: null,
-  absences: 4
+  absences: 4,
 };
 
 export const updateSchoolMaterials = {
@@ -152,5 +151,5 @@ export const updateSchoolMaterials = {
 
 export const createSchoolGrade = {
   name: "1º ano - Ensino Medio",
-  id_registration: "insira o id"
+  id_registration: "insira o id",
 };
