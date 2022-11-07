@@ -6,7 +6,7 @@ export interface IGradesHistoryRequest {
 	grade: string[]
 }
 
-export interface IHistoryUpdate {
+export interface IHistoryUpdate extends IGradesHistoryRequest {
 	school_subject?: string
 	firstGrade?: number
 	secondGrade?: number
