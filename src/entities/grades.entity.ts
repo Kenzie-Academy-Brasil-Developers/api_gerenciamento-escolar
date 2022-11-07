@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
 import { v4 as uuid } from "uuid";
 import { GradesHistory } from "./gradesHistory.entity";
 import { SchoolGrades } from "./schoolGrades.entity";
@@ -11,20 +18,26 @@ export class Grades {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
+  @Column()
   school_subject: string;
 
-	firstGrade: BigInteger;
+  @Column()
+  firstGrade: ;
 
-	secondGrade: BigInteger;
+  @Column()
+  secondGrade: BigInteger;
 
-	thirdGrade: BigInteger;
+  @Column()
+  thirdGrade: BigInteger;
 
-	fourthGrade: BigInteger;
+  @Column()
+  fourthGrade: BigInteger;
 
-	absences: BigInteger;
-	
-  @ManyToMany(() => GradesHistory, (grdHst) => grdHst.id)
-  history: GradesHistory;
+  @Column()
+  absences: BigInteger;
+
+  @OneToMany(() => GradesHistory, (grdHst) => grdHst.grade)
+  grade: GradesHistory;
 
   constructor() {
     if (!this.id) {

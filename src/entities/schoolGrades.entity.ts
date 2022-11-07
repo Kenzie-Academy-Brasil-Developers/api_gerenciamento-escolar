@@ -7,7 +7,8 @@ import {
   CreateDateColumn,
   OneToOne,
   JoinColumn,
-  ManyToMany
+  ManyToMany,
+  OneToMany
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
@@ -36,7 +37,8 @@ export class SchoolGrades {
   @ManyToOne(() => ClassRoom, (clsRm) => clsRm.name)
   nameClass: ClassRoom
 
-  @ManyToOne(() => Professionals)
+  @OneToOne(() => Professionals, { eager: true })
+  @JoinColumn()
   registration: Professionals;
 
   @ManyToOne(() => Students, (std) => std.id)
