@@ -33,7 +33,7 @@ export class TeachersRoom {
   updatedAt: string;
 
   @ManyToOne(() => Teachers, (tea) => tea.id)
-  teacher: Teachers;
+  teacher: string;
 
   @OneToOne(() => ClassRoom, { eager: true })
   @JoinColumn()
