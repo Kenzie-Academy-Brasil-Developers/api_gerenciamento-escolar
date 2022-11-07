@@ -22,19 +22,19 @@ export class Grades {
   school_subject: string;
 
   @Column()
-  firstGrade: BigInteger;
+  firstGrade: number;
 
   @Column()
-  secondGrade: BigInteger;
+  secondGrade: number;
 
   @Column()
-  thirdGrade: BigInteger;
+  thirdGrade: number;
 
   @Column()
-  fourthGrade: BigInteger;
+  fourthGrade: number;
 
   @Column()
-  absences: BigInteger;
+  absences: number;
 
   @OneToMany(() => GradesHistory, (grdHst) => grdHst.grade)
   grade: GradesHistory;
