@@ -3,12 +3,13 @@ import createTeacherController from "../controllers/teacher/createTeacher.contro
 import deleteTeacherController from "../controllers/teacher/deleteTeacher.controller";
 import listTeachersController from "../controllers/teacher/listTechers.controller";
 import updateTeacherController from "../controllers/teacher/updateTeacher.controller";
+import { authUser } from "../middlewares/authUser.middleware";
 
 const teacherRoutes = Router();
 
-teacherRoutes.post("", createTeacherController);
-teacherRoutes.get("", listTeachersController);
-teacherRoutes.patch("/:id", updateTeacherController);
-teacherRoutes.delete("/:id", deleteTeacherController);
+teacherRoutes.post("", authUser, createTeacherController);
+teacherRoutes.get("", authUser, listTeachersController);
+teacherRoutes.patch("/:id", authUser, updateTeacherController);
+teacherRoutes.delete("/:id", authUser, deleteTeacherController);
 
 export default teacherRoutes;
