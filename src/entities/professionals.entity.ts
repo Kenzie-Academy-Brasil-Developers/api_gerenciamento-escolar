@@ -7,8 +7,10 @@ import {
   UpdateDateColumn,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
-
+import { v4 as uuid } from "uuid";
+import { SchoolGrades } from "./schoolGrades.entity";
 import { Address } from "./address.entity";
 
 @Entity("professionals")
@@ -49,6 +51,9 @@ export class Professionals {
 
   @UpdateDateColumn({ type: "date" })
   updatedAt: string;
+
+  @OneToMany(() => SchoolGrades, (schlGrd) => schlGrd.registration)
+  registration: SchoolGrades[];
 
   @OneToOne(() => Address, { eager: true })
   @JoinColumn()

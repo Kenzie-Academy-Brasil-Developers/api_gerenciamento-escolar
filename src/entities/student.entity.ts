@@ -72,7 +72,7 @@ export class Students {
   schoolGrade: SchoolGrades;
 
   @OneToMany(() => GradesHistory, (grdHt) => grdHt.student)
-  gradeHistory: GradesHistory[];
+  gradeHistory: GradesHistory;
 
   constructor() {
     if (!this.id) {
