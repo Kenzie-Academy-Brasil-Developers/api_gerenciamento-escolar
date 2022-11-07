@@ -5,10 +5,14 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
   OneToMany
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { SchoolGrades } from "./schoolGrades.entity";
+import { v4 as uuid } from "uuid";
+import { Address } from "./address.entity";
 
 @Entity("professionals")
 export class Professionals {
@@ -19,15 +23,18 @@ export class Professionals {
   readonly id: string;
 
   @Column()
-  isPermission: boolean;
+  type: string;
+
+  @Column()
+  permission: boolean;
 
   @Column({ length: 80 })
   name: string;
 
-  @Column({ length: 20})
+  @Column({ length: 20 })
   contact: string;
 
-  @Column({ length: 80})
+  @Column({ length: 80 })
   cpf: string;
 
   @Column({ length: 80 })
@@ -48,6 +55,10 @@ export class Professionals {
 
   @OneToMany(() => SchoolGrades, schlGrd => schlGrd.registration)
   registration: SchoolGrades[]
+  
+  @OneToOne(() => Address, { eager: true })
+  @JoinColumn()
+  id_address: Address;
 
   constructor() {
     if (!this.id) {
