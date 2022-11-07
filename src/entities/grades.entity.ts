@@ -22,7 +22,7 @@ export class Grades {
   school_subject: string;
 
   @Column()
-  firstGrade: ;
+  firstGrade: BigInteger;
 
   @Column()
   secondGrade: BigInteger;

@@ -1,7 +1,7 @@
 import AppDataSource from "../../data-source";
 import { Grades } from "../../entities/grades.entity";
 import { SchoolGrades } from "../../entities/schoolGrades.entity";
-import { appError } from "../../errors/AppError";
+import { appError } from "../../errors/appError";
 
 const gradeUpdateService = async (
   data: Grades,
@@ -29,10 +29,11 @@ const gradeUpdateService = async (
     id: schlGrd.id ? schlGrd.id : returnschlGrd.id,
   });
 
-  
   await grdRepository.save({
     id,
-    school_subject: data.school_subject ? data.school_subject : returnGrade.school_subject,
+    school_subject: data.school_subject
+      ? data.school_subject
+      : returnGrade.school_subject,
     firstGrade: data.firstGrade ? data.firstGrade : returnGrade.firstGrade,
     secondGrade: data.secondGrade ? data.secondGrade : returnGrade.secondGrade,
     thirdGrade: data.thirdGrade ? data.thirdGrade : returnGrade.thirdGrade,

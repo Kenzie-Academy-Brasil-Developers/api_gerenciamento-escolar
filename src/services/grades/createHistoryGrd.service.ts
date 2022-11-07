@@ -3,7 +3,7 @@ import { Grades } from "../../entities/grades.entity";
 import { GradesHistory } from "../../entities/gradesHistory.entity";
 import { SchoolGrades } from "../../entities/schoolGrades.entity";
 import { Students } from "../../entities/student.entity";
-import { appError } from "../../errors/AppError";
+import { appError } from "../../errors/appError";
 
 const histGrdCreateService = async (data: GradesHistory) => {
   const { schoolGrade, student, grade } = data;
@@ -17,18 +17,20 @@ const histGrdCreateService = async (data: GradesHistory) => {
   const newGrades = grdRepository.create(grade);
   await grdRepository.save(newGrades);
 
-  const existGrade = findHistory.find((grd) => grd.school_subject === data.grade.school_subject)
-  if(existGrade){
-    throw new appError("Grade's exists", 404)
-  };
- 
+  const existGrade = findHistory.find(
+    (grd) => grd.school_subject === data.grade.school_subject
+  );
+  if (existGrade) {
+    throw new appError("Grade's exists", 404);
+  }
+
   const newHistory = new GradesHistory();
-  newHistory.schoolGrade = schoolGrade,
-  newHistory.student = student,
-  newHistory.grade = newGrades;
+  (newHistory.schoolGrade = schoolGrade),
+    (newHistory.student = student),
+    (newHistory.grade = newGrades);
 
   grdHstRepository.create(newHistory);
-  
+
   const ret = await grdHstRepository.save(newHistory);
   return {
     status: 201,

@@ -1,12 +1,10 @@
 import AppDataSource from "../../data-source";
-import { GradesHistory } from "../../entities/gradesHistory.entity";
 import { SchoolGrades } from "../../entities/schoolGrades.entity";
-
 
 const schlGrdService = async (id: string) => {
   const schlgrdRepository = AppDataSource.getRepository(SchoolGrades);
-    
-  const schlGrd = await schlgrdRepository.find()
+
+  const schlGrd = await schlgrdRepository.find();
   //const history = retHist.find((hist) => hist.id === id)
 
   // if(!history){
