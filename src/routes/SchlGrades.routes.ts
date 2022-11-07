@@ -11,7 +11,7 @@ const routesSchlGrd = Router();
 
 routesSchlGrd.post("/gradeHistory", historyCreateController);
 routesSchlGrd.get("/gradeHistory/student", histListController);
-routesSchlGrd.patch("/gradeHistory/student", gradeUpdateController);
+routesSchlGrd.patch("/gradeHistory/student/:id", gradeUpdateController);
 routesSchlGrd.delete("/gradeHistory/student/:id", grdDeleteController);
 
 

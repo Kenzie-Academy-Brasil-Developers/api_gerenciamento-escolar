@@ -8,7 +8,6 @@ import {
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { GradesHistory } from "./gradesHistory.entity";
-import { SchoolGrades } from "./schoolGrades.entity";
 
 @Entity("grades")
 export class Grades {
