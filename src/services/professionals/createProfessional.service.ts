@@ -1,4 +1,4 @@
-import { hashSync } from "bcryptjs";
+import { hashSync } from "bcrypt";
 import AppDataSource from "../../data-source";
 import { Professionals } from "../../entities/professionals.entity";
 import { Students } from "../../entities/student.entity";

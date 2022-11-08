@@ -3,7 +3,7 @@ import { Students } from "../../entities/student.entity";
 import { Address } from "../../entities/address.entity";
 import { ClassRoom } from "../../entities/classRoom.entity";
 import { appError } from "../../errors/appError";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { Professionals } from "../../entities/professionals.entity";
 import { SchoolGrades } from "../../entities/schoolGrades.entity";
 
@@ -14,39 +14,39 @@ const createStudentService = async (userData: any) => {
   const schoolGradeRepository = AppDataSource.getRepository(SchoolGrades);
   const professionalsRepository = AppDataSource.getRepository(Professionals);
 
-  const emailAlreadyExists = await studentRepository.findBy({
+  const emailAlreadyExists = await studentRepository.findOneBy({
     email: userData.email,
   });
   if (emailAlreadyExists) {
-    throw new appError("email is already exists", 400);
+    throw new appError("email is already exists", 310);
   }
 
-  const addressExists = await addressRepository.findBy({
+  const addressExists = await addressRepository.findOneBy({
     id: userData.id_address,
   });
   if (!addressExists) {
-    throw new appError("invalid adress", 400);
+    throw new appError("invalid adress", 320);
   }
 
-  const classRoomExists = await classRoomRepository.findBy({
-    id: userData.id_classroom,
-  });
-  if (!classRoomExists) {
-    throw new appError("invalid classroom", 400);
-  }
+  // const classRoomExists = await classRoomRepository.findOneBy({
+  //   id: userData.id_classroom,
+  // });
+  // if (!classRoomExists) {
+  //   throw new appError("invalid classroom", 340);
+  // }
 
-  const schoolGradeExists = await schoolGradeRepository.findBy({
+  const schoolGradeExists = await schoolGradeRepository.findOneBy({
     id: userData.id_schoolGrade,
   });
   if (!schoolGradeExists) {
-    throw new appError("invalid school grade", 400);
+    throw new appError("invalid school grade", 330);
   }
 
-  const professionalExists = await professionalsRepository.findBy({
+  const professionalExists = await professionalsRepository.findOneBy({
     id: userData.id_registration,
   });
   if (!professionalExists) {
-    throw new appError("invalid registration", 400);
+    throw new appError("invalid registration", 350);
   }
 
   const student = new Students();
@@ -54,10 +54,10 @@ const createStudentService = async (userData: any) => {
   student.age = userData.age;
   student.password = bcrypt.hashSync(userData.password, 10);
   student.contact = userData.contact;
-  student.schoolGrade = schoolGradeExists[0];
-  student.address = addressExists[0];
-  student.classRoom = classRoomExists[0];
-  student.registration = professionalExists;
+  student.schoolGrade = schoolGradeExists;
+  student.address = addressExists;
+  // student.classRoom = classRoomExists;
+  student.registration[0] = professionalExists;
 
   studentRepository.create(student);
   await studentRepository.save(student);
