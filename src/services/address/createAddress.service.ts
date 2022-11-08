@@ -9,26 +9,24 @@ const createAddressService = async (data: Address) => {
 
   const addressAlreadyExist = await addressRepository.findOneBy({
     cep: cep,
+    district: district,
     number: number,
   });
 
   if (addressAlreadyExist) {
-    throw new appError(
-      "Two properties cannot be registered with the same address",
-      400
-    );
+    throw new appError("this address already exists", 400);
   }
 
   if (state.length > 2) {
     throw new appError(
-      "Properties with the state field greater than 2 digits cannot be registered",
+      "address with the state field greater than 2 digits cannot be registered",
       400
     );
   }
 
   if (cep.length > 8) {
     throw new appError(
-      "Properties with zipCode field longer than 8 digits cannot be registered",
+      "address with zipCode field longer than 8 digits cannot be registered",
       400
     );
   }
