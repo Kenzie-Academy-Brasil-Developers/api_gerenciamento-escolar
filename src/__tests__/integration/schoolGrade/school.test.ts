@@ -5,6 +5,7 @@ import app from "../../../app";
 import {
   addressProfessional,
   addressProfessionalIsNotAdm,
+  addressTeacher,
   createProfessional,
   createProfessionalIsNotAdm,
   createSchoolGrade,
@@ -12,7 +13,7 @@ import {
   loginProfessionalIsNotAdm,
 } from "../../mocks";
 
-describe("/address", () => {
+describe("Test SchoolGrade routes", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -44,34 +45,34 @@ describe("/address", () => {
     createSchoolGrade.id_registration = createProfessionalAdm.body.data.id;
     const response = await request(app)
       .post("/schoolGrade")
-      .set("Authorization", ` Bearer ${loginProfessionalAdm.body.token}`)
+      .set("Authorization", `Bearer ${loginProfessionalAdm.body.data}`)
       .send(createSchoolGrade);
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty("message");
     expect(response.body.data).toHaveProperty("name");
-    expect(response.body.data).toHaveProperty("id_registration");
     expect(response.body.data).toHaveProperty("createdAt");
     expect(response.body.data).toHaveProperty("updatedAt");
     expect(response.body.data).toHaveProperty("id");
   });
   test("Must not be able to create a new school grade with the same name", async () => {
-    const address = await request(app)
-      .post("/address")
-      .send(addressProfessional);
+    createProfessional.email = "professional2@gmail.com";
+    createProfessional.cpf = "12208513366";
+    const address = await request(app).post("/address").send(addressTeacher);
     createProfessional.id_address = address.body.data.id;
     const createProfessionalAdm = await request(app)
       .post("/professionals")
       .send(createProfessional);
     const loginProfessionalAdm = await request(app)
-      .post("/professionals/login")
+      .post("/login")
       .send(loginProfessional);
 
     createSchoolGrade.id_registration = createProfessionalAdm.body.data.id;
+    console.log(loginProfessionalAdm.body);
 
     const response = await request(app)
       .post("/schoolGrade")
-      .set("Authorization", ` Bearer ${loginProfessionalAdm.body.token}`)
+      .set("Authorization", `Bearer ${loginProfessionalAdm.body.data}`)
       .send(createSchoolGrade);
 
     expect(response.status).toBe(400);
@@ -79,6 +80,9 @@ describe("/address", () => {
   });
 
   test("Must not be able to create a new school grade without autentication", async () => {
+    addressProfessional.number = "12";
+    createProfessional.email = "professional3@gmail.com";
+    createProfessional.cpf = "10019032177";
     const address = await request(app)
       .post("/address")
       .send(addressProfessional);
@@ -107,14 +111,14 @@ describe("/address", () => {
       .post("/professionals")
       .send(createProfessionalIsNotAdm);
     const professionalIsNotAdmLogin = await request(app)
-      .post("/professionals/login")
+      .post("/login")
       .send(loginProfessionalIsNotAdm);
 
     createSchoolGrade.id_registration = professionalIsNotAdm.body.data.id;
 
     const response = await request(app)
       .post("/schoolGrade")
-      .set("Authorization", ` Bearer ${professionalIsNotAdmLogin.body.token}`)
+      .set("Authorization", `Bearer ${professionalIsNotAdmLogin.body.token}`)
       .send(createSchoolGrade);
 
     expect(response.status).toBe(401);

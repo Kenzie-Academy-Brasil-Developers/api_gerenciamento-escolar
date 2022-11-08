@@ -3,7 +3,7 @@ import { Students } from "../../entities/student.entity";
 import { Address } from "../../entities/address.entity";
 import { ClassRoom } from "../../entities/classRoom.entity";
 import { appError } from "../../errors/appError";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { Professionals } from "../../entities/professionals.entity";
 import { SchoolGrades } from "../../entities/schoolGrades.entity";
 
