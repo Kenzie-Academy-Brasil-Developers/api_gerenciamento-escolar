@@ -52,12 +52,12 @@ const createTeacherService = async (data: Teachers) => {
     name,
     email,
     password: hashedPassword,
-    isTeacher,
+    isTeacher: true,
     id_address,
     id_registration,
     createdAt,
     updatedAt,
-    isActive,
+    isActive: true,
   });
 
   await teacherRepository.save(newTeacher);
