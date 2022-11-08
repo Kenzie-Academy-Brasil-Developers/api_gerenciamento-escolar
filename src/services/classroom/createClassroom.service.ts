@@ -9,7 +9,7 @@ export const createClassroomService = async ({
   capacity,
   id_schoolGrade,
 }: IClassRoomRequest): Promise<ClassRoom> => {
-  const schGrdRepository = AppDataSource.getMongoRepository(SchoolGrades);
+  const schGrdRepository = AppDataSource.getRepository(SchoolGrades);
   const classroomRepository = AppDataSource.getRepository(ClassRoom);
 
   const findClassroom = await classroomRepository.findOneBy({ name: name });
@@ -18,14 +18,14 @@ export const createClassroomService = async ({
     id: id_schoolGrade,
   });
   if (findClassroom) {
-    throw new appError("Classroom already exists", 403);
+    throw new appError("Classroom already exists", 400);
   }
   if (!findSchoolGrade) {
     throw new appError("School Grade not found", 404);
   }
 
   const createdClassroom = classroomRepository.create({
-    name: name,
+    name,
     capacity,
     schoolGrade: findSchoolGrade,
   });

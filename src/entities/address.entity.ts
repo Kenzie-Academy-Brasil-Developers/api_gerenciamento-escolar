@@ -1,5 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { v4 as uuid } from "uuid";
+import { Professionals } from "./professionals.entity";
+import { Teachers } from "./teachers.entity";
 
 @Entity("address")
 export class Address {
@@ -9,7 +11,7 @@ export class Address {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({length: 8})
+  @Column({ length: 8 })
   cep: string;
 
   @Column()
@@ -23,6 +25,12 @@ export class Address {
 
   @Column()
   country: string;
+
+  @OneToMany(() => Professionals, (professionals) => professionals.id_address)
+  professionals: Professionals[];
+
+  @OneToMany(() => Teachers, (teachers) => teachers.id_address)
+  teachers: Teachers[];
 
   constructor() {
     if (!this.id) {

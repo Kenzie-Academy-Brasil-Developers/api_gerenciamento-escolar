@@ -8,10 +8,12 @@ import {
   OneToOne,
   JoinColumn,
   OneToMany,
+  ManyToOne,
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { SchoolGrades } from "./schoolGrades.entity";
 import { Address } from "./address.entity";
+import { Teachers } from "./teachers.entity";
 
 @Entity("professionals")
 export class Professionals {
@@ -55,7 +57,9 @@ export class Professionals {
   @OneToMany(() => SchoolGrades, (schlGrd) => schlGrd.registration)
   registration: SchoolGrades[];
 
-  @OneToOne(() => Address, { eager: true })
-  @JoinColumn()
+  @ManyToOne(() => Address, (address) => address.id, { eager: true })
   id_address: Address;
+
+  @OneToMany(() => Teachers, (teachers) => teachers.id_registration)
+  id_teacher: Teachers;
 }
