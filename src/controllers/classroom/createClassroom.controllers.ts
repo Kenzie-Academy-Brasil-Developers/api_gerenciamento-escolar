@@ -23,9 +23,9 @@ export const createClassroomController = async (
 export const listClassroomController = async (req: Request, res: Response) => {
   const classrooms = await listClassroomService();
 
-  return res.status(201).json({
-    message: "search performed successfully",
+  return res.status(200).json({
     data: classrooms,
+    message: "search performed successfully",
   });
 };
 
