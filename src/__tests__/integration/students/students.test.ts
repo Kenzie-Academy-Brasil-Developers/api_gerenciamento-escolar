@@ -60,7 +60,7 @@ describe("Testing the student routes", () => {
         ...createSchoolGrade,
         id_registration: responseProfessional.body.data.id,
       });
-    console.log("responseSchoolGrade", responseSchoolGrade.body);
+
     const classRoom = {
       ...createClassroom,
       id_registration: responseProfessional.body.data.id,
@@ -71,7 +71,7 @@ describe("Testing the student routes", () => {
       .post("/classroom")
       .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`)
       .send(classRoom);
-    console.log("classroomRESPONSE", responseClassRoom.body);
+
     const response = await request(app)
       .post("/students")
       .send({
@@ -79,33 +79,25 @@ describe("Testing the student routes", () => {
         id_address: responseAddress.body.data.id,
         id_registration: responseProfessional.body.data.id,
         id_classroom: responseClassRoom.body.id,
+        id_schoolGrade: responseSchoolGrade.body.data.id,
       });
+
     userId = response;
     expect(response.status).toBe(201);
     expect(response.body.data).toHaveProperty("id");
-    // expect(response.body.data).toEqual(
-    //   expect.objectContaining({
-    //     id: "uuid",
-    //     name,
-    //     age,
-    //     email,
-    //     isTeacher: false,
-    //     contact,
-    //     id_address,
-    //     id_registration,
-    //     id_classroom,
-    //     createdAt: Date(),
-    //     updatedAt: Date(),
-    //     isActive: true,
-    //   })
-    // );
   });
 
   test("Should be able to list all students", async () => {
+    const responseLoginProfessional = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+
+    console.log("testando", responseLoginProfessional.body.data);
     const response = await request(app).get("/students");
+    // .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("map");
+    expect(response.body.data).toHaveProperty("map");
   });
 
   test("Should be abre to DELETE a student", async () => {

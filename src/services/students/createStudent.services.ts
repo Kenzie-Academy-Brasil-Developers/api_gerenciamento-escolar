@@ -3,7 +3,7 @@ import { Students } from "../../entities/student.entity";
 import { Address } from "../../entities/address.entity";
 import { ClassRoom } from "../../entities/classRoom.entity";
 import { appError } from "../../errors/appError";
-import bcrypt from "bcrypt";
+import { hash } from "bcrypt";
 import { Professionals } from "../../entities/professionals.entity";
 import { SchoolGrades } from "../../entities/schoolGrades.entity";
 
@@ -18,49 +18,58 @@ const createStudentService = async (userData: any) => {
     email: userData.email,
   });
   if (emailAlreadyExists) {
-    throw new appError("email is already exists", 310);
+    throw new appError("email is already exists", 401);
   }
 
   const addressExists = await addressRepository.findOneBy({
     id: userData.id_address,
   });
   if (!addressExists) {
-    throw new appError("invalid adress", 320);
+    throw new appError("invalid adress", 401);
   }
 
-  // const classRoomExists = await classRoomRepository.findOneBy({
-  //   id: userData.id_classroom,
-  // });
-  // if (!classRoomExists) {
-  //   throw new appError("invalid classroom", 340);
-  // }
+  const classRoomExists = await classRoomRepository.findOneBy({
+    id: userData.id_classroom,
+  });
+  if (!classRoomExists) {
+    throw new appError("invalid classroom", 340);
+  }
 
   const schoolGradeExists = await schoolGradeRepository.findOneBy({
     id: userData.id_schoolGrade,
   });
+
   if (!schoolGradeExists) {
-    throw new appError("invalid school grade", 330);
+    throw new appError("invalid school grade", 401);
   }
 
   const professionalExists = await professionalsRepository.findOneBy({
     id: userData.id_registration,
   });
   if (!professionalExists) {
-    throw new appError("invalid registration", 350);
+    throw new appError("invalid registration", 401);
   }
 
-  const student = new Students();
-  student.name = userData.name;
-  student.age = userData.age;
-  student.password = bcrypt.hashSync(userData.password, 10);
-  student.contact = userData.contact;
-  student.schoolGrade = schoolGradeExists;
-  student.address = addressExists;
+  // const student = new Students();
+  // student.name = userData.name;
+  // student.age = userData.age;
+  // student.password = await hash(userData.password, 10);
+  // student.contact = userData.contact;
+  // student.schoolGrade = schoolGradeExists;
+  // student.address = addressExists;
   // student.classRoom = classRoomExists;
-  student.registration[0] = professionalExists;
+  // student.registration = [professionalExists];
 
-  studentRepository.create(student);
-  await studentRepository.save(student);
+  const student = studentRepository.create({
+    name: userData.name,
+    age: userData.age,
+    password: await hash(userData.password, 10),
+    contact: userData.contact,
+    schoolGrade: schoolGradeExists,
+    address: addressExists,
+    classRoom: classRoomExists,
+    registration: [professionalExists],
+  });
 
   return student;
 };

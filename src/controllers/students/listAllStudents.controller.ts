@@ -6,7 +6,11 @@ const listAllStudentsController = async (
   request: Request
 ) => {
   const students = await listAllStudentsService();
-  return response.status(200).json(students);
+  return response.status(200).json({
+    status: 200,
+    message: "search performed successfully",
+    data: students,
+  });
 };
 
 export default listAllStudentsController;
