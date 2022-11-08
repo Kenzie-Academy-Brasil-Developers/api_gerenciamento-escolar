@@ -1,4 +1,4 @@
-import { hashSync } from "bcrypt";
+import { hashSync } from "bcryptjs";
 import AppDataSource from "../../data-source";
 import { Professionals } from "../../entities/professionals.entity";
 import { Students } from "../../entities/student.entity";
@@ -52,12 +52,12 @@ const createTeacherService = async (data: Teachers) => {
     name,
     email,
     password: hashedPassword,
-    isTeacher,
+    isTeacher: true,
     id_address,
     id_registration,
     createdAt,
     updatedAt,
-    isActive,
+    isActive: true,
   });
 
   await teacherRepository.save(newTeacher);

@@ -41,10 +41,20 @@ const updateTeacherService = async (data: ITeacherUpdate, id: any) => {
     id,
   });
 
+  const teacherReturn = {
+    id: teacher?.id,
+    name: teacher?.name,
+    email: teacher?.email,
+    isActive: teacher?.isActive,
+    isTeacher: teacher?.isTeacher,
+    createdAt: teacher?.createdAt,
+    updatedAt: teacher?.updatedAt,
+  };
+
   return {
     status: 200,
     message: "updated teacher successfully",
-    data: teacher,
+    data: teacherReturn,
   };
 };
 export default updateTeacherService;
