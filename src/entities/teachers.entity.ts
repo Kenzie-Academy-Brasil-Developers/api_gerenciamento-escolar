@@ -51,7 +51,7 @@ export class Teachers {
   @JoinColumn()
   id_registration: Professionals[];
 
-  @OneToOne(() => Address, { eager: true })
+  @OneToOne(() => Address)
   @JoinColumn()
   id_address: Address;
 
