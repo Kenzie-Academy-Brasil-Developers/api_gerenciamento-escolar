@@ -6,7 +6,7 @@ import { ITeacherClassroom } from "../../interfaces/teacher";
 import { appError } from "../../errors/appError";
 
 const createTeacherClassroomService = async (datas: ITeacherClassroom) => {
-  const { idTeacher, idClassroom } = datas;
+  const { idTeacher, idClassroom, dayTheWeek, classSchedule } = datas;
   const repositoryTeacher = AppDataSource.getRepository(Teachers);
   const repositoryClassroom = AppDataSource.getRepository(ClassRoom);
   const repositoryTeachersRoom = AppDataSource.getRepository(TeachersRoom);
@@ -25,15 +25,19 @@ const createTeacherClassroomService = async (datas: ITeacherClassroom) => {
   if (!validationClassroomId) {
     throw new appError("Classroom does not exists", 404);
   }
-  repositoryTeachersRoom.create(datas);
-  await repositoryTeachersRoom.save(datas);
+  const newTeacherRoom = new TeachersRoom();
+  (newTeacherRoom.classRoom = validationClassroomId),
+    (newTeacherRoom.classSchedule = classSchedule);
+  newTeacherRoom.dayTheWeek = dayTheWeek;
+  newTeacherRoom.teacher = idTeacher;
+  repositoryTeachersRoom.create(newTeacherRoom);
+  await repositoryTeachersRoom.save(newTeacherRoom);
 
   return {
     status: 201,
     message: "Teachers Room sucesfully created",
     data: {
-      teacher: validationTeacherId.name,
-      class: validationClassroomId.name,
+      ...newTeacherRoom,
     },
   };
 };

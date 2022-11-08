@@ -7,11 +7,13 @@ import {
   addressTeacher,
   createClassroom,
   createProfessional,
+  createSchoolGrade,
   createTeacher,
   createTeacherClassroom,
   loginProfessional,
   loginTeacher,
 } from "../../mocks";
+import { createClassroomController } from "../../../controllers/classroom/createClassroom.controllers";
 
 describe("Test TecaherClassroom routes", () => {
   let connection: DataSource;
@@ -56,7 +58,13 @@ describe("Test TecaherClassroom routes", () => {
       .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`);
     const loginTeacher1 = await request(app).post("/login").send(loginTeacher);
 
-    createClassroom.id_registration = responseProfessionals.body.data.id;
+    createSchoolGrade.id_registration = responseProfessionals.body.data.id;
+    const responseSchoolGrade = await request(app)
+      .post("/schoolGrade")
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
+      .send(createSchoolGrade);
+
+    createClassroom.id_schoolGrade = responseSchoolGrade.body.data.id;
     const createdClassroomResponse = await request(app)
       .post("/classroom")
       .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
@@ -72,7 +80,9 @@ describe("Test TecaherClassroom routes", () => {
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty("message");
     expect(response.body.data).toHaveProperty("teacher");
-    expect(response.body.data).toHaveProperty("class");
+    expect(response.body.data).toHaveProperty("dayTheWeek");
+    expect(response.body.data).toHaveProperty("classSchedule");
+    expect(response.body.data).toHaveProperty("classRoom");
   });
 
   test("POST /teacherClassroom - Must not be able to create new teacher classroom without authorization", async () => {
@@ -108,7 +118,15 @@ describe("Test TecaherClassroom routes", () => {
       .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`);
     const loginTeacher1 = await request(app).post("/login").send(loginTeacher);
 
-    createClassroom.id_registration = responseProfessionals.body.data.id;
+    createSchoolGrade.id_registration = responseProfessionals.body.data.id;
+    createSchoolGrade.name = "nome qualquer";
+    const responseSchoolGrade = await request(app)
+      .post("/schoolGrade")
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
+      .send(createSchoolGrade);
+
+    createClassroom.id_schoolGrade = responseSchoolGrade.body.data.id;
+    createClassroom.name = "terceira série";
     const createdClassroomResponse = await request(app)
       .post("/classroom")
       .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
@@ -119,18 +137,127 @@ describe("Test TecaherClassroom routes", () => {
     const response = await request(app)
       .post("/teacher/classroom")
       .send(createTeacherClassroom);
-
     expect(response.status).toBe(401);
     expect(response.body).toHaveProperty("message");
   });
 
-  test("Must be able to list all teachers classroom", async () => {
-    const response = await request(app).get("/teachers/classroom");
+  test("PATCH- teacher/classroom - Must be able to update a teacherClass", async () => {
+    addressProfessional.number = "123";
+    const responseAddressProfessional = await request(app)
+      .post("/address")
+      .send(addressProfessional);
 
-    expect(response.status).toBe(200);
-    expect(response.body.data[0]).toHaveProperty("idTeacher");
-    expect(response.body.data[0]).toHaveProperty("idClassroom");
-    expect(response.body.data[0]).toHaveProperty("classSchedule");
-    expect(response.body.data[0]).toHaveProperty(" dayTheWeek");
+    createProfessional.id_address = responseAddressProfessional.body.data.id;
+    createProfessional.email = "professional7@gmail.com";
+
+    const responseProfessionals = await request(app)
+      .post("/professionals")
+      .send(createProfessional);
+
+    loginProfessional.email = "professional7@gmail.com";
+    const professionalLoginResponse = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+
+    addressTeacher.number = "188";
+    const addressTeacher1 = await request(app)
+      .post("/address")
+      .send(addressTeacher);
+    createTeacher.id_address = addressTeacher1.body.data.id;
+    createTeacher.id_registration = responseProfessionals.body.data.id;
+    createTeacher.email = "teacher4@gmail.com";
+    loginTeacher.email = "teacher4@gmail.com";
+
+    const createTeacher1 = await request(app)
+      .post("/teacher")
+      .send(createTeacher)
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`);
+    const loginTeacher1 = await request(app).post("/login").send(loginTeacher);
+
+    createSchoolGrade.id_registration = responseProfessionals.body.data.id;
+    createSchoolGrade.name = "nome da School Grade";
+    const responseSchoolGrade = await request(app)
+      .post("/schoolGrade")
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
+      .send(createSchoolGrade);
+
+    createClassroom.id_schoolGrade = responseSchoolGrade.body.data.id;
+    createClassroom.name = "sexta série";
+    const createdClassroomResponse = await request(app)
+      .post("/classroom")
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
+      .send(createClassroom);
+
+    const getTeacherClassroom = await request(app).get("/teacher/classroom");
+
+    createTeacherClassroom.classSchedule = "14:00";
+    createTeacherClassroom.dayTheWeek = "Qua";
+    const response = await request(app)
+      .patch(`/teacher/classroom/${getTeacherClassroom.body[0].id}`)
+      .send(createTeacherClassroom)
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`);
+
+    expect(response.body).toHaveProperty("message");
+    expect(response.body.data.classSchedule).toEqual("14:00");
+    expect(response.body.data.dayTheWeek).toEqual("Qua");
+  });
+
+  test("PATCH- teacher/classroom - Must not be able to update a teacherClass whithout authentication", async () => {
+    addressProfessional.number = "120";
+    const responseAddressProfessional = await request(app)
+      .post("/address")
+      .send(addressProfessional);
+
+    createProfessional.id_address = responseAddressProfessional.body.data.id;
+    createProfessional.email = "professional6@gmail.com";
+
+    const responseProfessionals = await request(app)
+      .post("/professionals")
+      .send(createProfessional);
+
+    loginProfessional.email = "professional6@gmail.com";
+    const professionalLoginResponse = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+
+    addressTeacher.number = "185";
+    const addressTeacher1 = await request(app)
+      .post("/address")
+      .send(addressTeacher);
+    createTeacher.id_address = addressTeacher1.body.data.id;
+    createTeacher.id_registration = responseProfessionals.body.data.id;
+    createTeacher.email = "teacher9@gmail.com";
+    loginTeacher.email = "teacher9@gmail.com";
+
+    const createTeacher1 = await request(app)
+      .post("/teacher")
+      .send(createTeacher)
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`);
+    const loginTeacher1 = await request(app).post("/login").send(loginTeacher);
+
+    createSchoolGrade.id_registration = responseProfessionals.body.data.id;
+    createSchoolGrade.name = "nome da School";
+    const responseSchoolGrade = await request(app)
+      .post("/schoolGrade")
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
+      .send(createSchoolGrade);
+
+    createClassroom.id_schoolGrade = responseSchoolGrade.body.data.id;
+    createClassroom.name = "oitava série";
+    const createdClassroomResponse = await request(app)
+      .post("/classroom")
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
+      .send(createClassroom);
+
+    const getTeacherClassroom = await request(app).get("/teacher/classroom");
+
+    createTeacherClassroom.classSchedule = "15:00";
+    createTeacherClassroom.dayTheWeek = "Sex";
+    const response = await request(app)
+      .patch(`/teacher/classroom/${getTeacherClassroom.body[0].id}`)
+      .send(createTeacherClassroom);
+
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty("message");
   });
 });

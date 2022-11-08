@@ -34,3 +34,8 @@ export interface ITeacherClassroom {
   classSchedule: string;
   dayTheWeek: string;
 }
+
+export interface ITeacherClassroomUpdate {
+  classSchedule?: string;
+  dayTheWeek?: string;
+}
