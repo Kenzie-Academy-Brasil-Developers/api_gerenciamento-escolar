@@ -50,6 +50,7 @@ export const createTeacher = {
   name: "Professor 1",
   email: "professor1@gmail.com",
   password: "12345678",
+  isTeacher: true,
   id_address: "insira o id",
   id_registration: "insira o id",
 };

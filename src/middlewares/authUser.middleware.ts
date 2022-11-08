@@ -18,7 +18,7 @@ export const authUser = (
 
   jwt.verify(
     token as string,
-    process.env.JWT_SECRET as string,
+    process.env.SECRET_KEY as string,
     (error: any, decoded: any) => {
       if (error) {
         return response.status(401).json({

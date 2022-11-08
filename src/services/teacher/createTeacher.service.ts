@@ -1,5 +1,7 @@
+import { hashSync } from "bcrypt";
 import AppDataSource from "../../data-source";
 import { Professionals } from "../../entities/professionals.entity";
+import { Students } from "../../entities/student.entity";
 import { Teachers } from "../../entities/teachers.entity";
 import { appError } from "../../errors/appError";
 
@@ -18,6 +20,15 @@ const createTeacherService = async (data: Teachers) => {
 
   const teacherRepository = AppDataSource.getRepository(Teachers);
   const professionalRepository = AppDataSource.getRepository(Professionals);
+  const studentRepository = AppDataSource.getRepository(Students);
+
+  const studentsAlreadyExists = await studentRepository.findOneBy({
+    email: email,
+  });
+
+  if (studentsAlreadyExists) {
+    throw new appError("email is already exists", 400);
+  }
 
   const professionalAlreadyExists = await professionalRepository.findOneBy({
     email: email,
@@ -35,10 +46,12 @@ const createTeacherService = async (data: Teachers) => {
     throw new appError("email is already exists", 400);
   }
 
+  const hashedPassword = hashSync(password, 10);
+
   const newTeacher = teacherRepository.create({
     name,
     email,
-    password,
+    password: hashedPassword,
     isTeacher,
     id_address,
     id_registration,
