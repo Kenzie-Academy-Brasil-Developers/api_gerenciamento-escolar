@@ -1,0 +1,30 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class createTables1667924353308 implements MigrationInterface {
+    name = 'createTables1667924353308'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "teachers" DROP CONSTRAINT "FK_0ef5f97b6e4059654fd002ec2f0"`);
+        await queryRunner.query(`ALTER TABLE "teachers" DROP CONSTRAINT "FK_d59fad21ec4612ec98a79e1b925"`);
+        await queryRunner.query(`ALTER TABLE "teachers" DROP CONSTRAINT "REL_0ef5f97b6e4059654fd002ec2f"`);
+        await queryRunner.query(`ALTER TABLE "teachers" DROP CONSTRAINT "REL_d59fad21ec4612ec98a79e1b92"`);
+        await queryRunner.query(`ALTER TABLE "professionals" DROP CONSTRAINT "FK_e9ee0c7a4fecd3c28f69cd39034"`);
+        await queryRunner.query(`ALTER TABLE "professionals" DROP CONSTRAINT "REL_e9ee0c7a4fecd3c28f69cd3903"`);
+        await queryRunner.query(`ALTER TABLE "teachers" ADD CONSTRAINT "FK_0ef5f97b6e4059654fd002ec2f0" FOREIGN KEY ("idRegistrationId") REFERENCES "professionals"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "teachers" ADD CONSTRAINT "FK_d59fad21ec4612ec98a79e1b925" FOREIGN KEY ("idAddressId") REFERENCES "address"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "professionals" ADD CONSTRAINT "FK_e9ee0c7a4fecd3c28f69cd39034" FOREIGN KEY ("idAddressId") REFERENCES "address"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "professionals" DROP CONSTRAINT "FK_e9ee0c7a4fecd3c28f69cd39034"`);
+        await queryRunner.query(`ALTER TABLE "teachers" DROP CONSTRAINT "FK_d59fad21ec4612ec98a79e1b925"`);
+        await queryRunner.query(`ALTER TABLE "teachers" DROP CONSTRAINT "FK_0ef5f97b6e4059654fd002ec2f0"`);
+        await queryRunner.query(`ALTER TABLE "professionals" ADD CONSTRAINT "REL_e9ee0c7a4fecd3c28f69cd3903" UNIQUE ("idAddressId")`);
+        await queryRunner.query(`ALTER TABLE "professionals" ADD CONSTRAINT "FK_e9ee0c7a4fecd3c28f69cd39034" FOREIGN KEY ("idAddressId") REFERENCES "address"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "teachers" ADD CONSTRAINT "REL_d59fad21ec4612ec98a79e1b92" UNIQUE ("idAddressId")`);
+        await queryRunner.query(`ALTER TABLE "teachers" ADD CONSTRAINT "REL_0ef5f97b6e4059654fd002ec2f" UNIQUE ("idRegistrationId")`);
+        await queryRunner.query(`ALTER TABLE "teachers" ADD CONSTRAINT "FK_d59fad21ec4612ec98a79e1b925" FOREIGN KEY ("idAddressId") REFERENCES "address"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "teachers" ADD CONSTRAINT "FK_0ef5f97b6e4059654fd002ec2f0" FOREIGN KEY ("idRegistrationId") REFERENCES "professionals"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+    }
+
+}
