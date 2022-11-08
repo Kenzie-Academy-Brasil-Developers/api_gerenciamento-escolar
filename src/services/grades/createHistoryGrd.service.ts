@@ -8,10 +8,10 @@ import { appError } from "../../errors/appError";
 
 const histGrdCreateService = async (data: IGradesHistoryRequest) => {
   const { schoolGrade, student, grade } = data;
-  
+
   const schlGrdRepository = AppDataSource.getRepository(SchoolGrades);
   const newSchGr = await schlGrdRepository.findOneBy({
-    id: schoolGrade
+    id: schoolGrade,
   });
   if (!newSchGr) {
     throw new appError("SchoolGrade not found", 404);
@@ -19,10 +19,10 @@ const histGrdCreateService = async (data: IGradesHistoryRequest) => {
 
   const stdRepository = AppDataSource.getRepository(Students);
   const findStdt = await stdRepository.findOneBy({
-    id: student
+    id: student,
   });
-  if(!findStdt){
-    throw new appError("Not found student", 400)
+  if (!findStdt) {
+    throw new appError("Not found student", 400);
   }
 
   const grdRepository = AppDataSource.getRepository(Grades);
@@ -34,9 +34,9 @@ const histGrdCreateService = async (data: IGradesHistoryRequest) => {
   await grdRepository.save(newGrades);
 
   const newHistory = new GradesHistory();
-  newHistory.schoolGrade = newSchGr,
-  newHistory.student = findStdt,
-  newHistory.grade = newGrades;
+  (newHistory.schoolGrade = newSchGr),
+    (newHistory.student = findStdt),
+    (newHistory.grade = newGrades);
 
   grdHstRepository.create(newHistory);
 

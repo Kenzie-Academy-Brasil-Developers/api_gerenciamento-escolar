@@ -55,10 +55,4 @@ export class Teachers {
 
   @ManyToOne(() => Address, (address) => address.id, { eager: true })
   id_address: Address;
-
-  constructor() {
-    if (!this.id) {
-      this.id = uuid();
-    }
-  }
 }
