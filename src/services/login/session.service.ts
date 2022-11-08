@@ -12,7 +12,7 @@ const sessionService = async (data: IStudentLogin) => {
   const teacherRepository = AppDataSource.getRepository(Teachers);
   const professionalRepository = AppDataSource.getRepository(Professionals);
   const studentRepository = AppDataSource.getRepository(Students);
-  console.log("teste");
+
   const userTeacher = await teacherRepository.findOneBy({ email: data.email });
   const userProfessional = await professionalRepository.findOneBy({
     email: data.email,
