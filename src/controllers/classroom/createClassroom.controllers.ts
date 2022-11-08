@@ -48,10 +48,10 @@ export const updateClassroomController = async (
 ) => {
   const id = req.params.id;
   const data = req.body;
+  delete data.decodifiedToken;
 
-  const updatedClassroom = updateClassroomService(id, data);
-
-  return res.status(201).json({
+  const updatedClassroom = await updateClassroomService(id, data);
+  return res.status(200).json({
     message: "updated classroom successfully",
     data: updatedClassroom,
   });
@@ -62,7 +62,8 @@ export const deleteClassroomController = async (
   res: Response
 ) => {
   const id = req.params.id;
-  deleteClassroomService(id);
 
-  return res.status(200);
+  await deleteClassroomService(id);
+
+  return res.status(204).send();
 };
