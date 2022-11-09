@@ -3,13 +3,13 @@ import createTeacherController from "../controllers/teacher/createTeacher.contro
 import createTeacherClassroomController from "../controllers/teacher/createTeacherClassroom.controller";
 import deleteTeacherController from "../controllers/teacher/deleteTeacher.controller";
 import deleteTeacherClassroomController from "../controllers/teacher/deleteTeacherClassroom.controller";
-import listTeacherClassroomController from "../controllers/teacher/listTeacherClassroom.controller";
 import listTeachersController from "../controllers/teacher/listTechers.controller";
 import updateTeacherController from "../controllers/teacher/updateTeacher.controller";
 import updateTeacherClassroomController from "../controllers/teacher/updateTeacherClassroom.controller";
 import { authUser } from "../middlewares/authUser.middleware";
 import permissionUserMiddeware from "../middlewares/permissionUser.middleware";
 
+import testListTeacherClassroomController from "../controllers/teacher/testListTeacherClassroom.controller";
 const teacherRoutes = Router();
 
 teacherRoutes.post("", authUser, createTeacherController);
@@ -34,7 +34,7 @@ teacherRoutes.patch(
   permissionUserMiddeware,
   updateTeacherClassroomController
 );
-teacherRoutes.get("/classroom", listTeacherClassroomController);
+teacherRoutes.get("/classroom/test", testListTeacherClassroomController);
 teacherRoutes.delete(
   "/classroom/:id",
   authUser,
