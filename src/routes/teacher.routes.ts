@@ -1,8 +1,12 @@
 import { Router } from "express";
 import createTeacherController from "../controllers/teacher/createTeacher.controller";
+import createTeacherClassroomController from "../controllers/teacher/createTeacherClassroom.controller";
 import deleteTeacherController from "../controllers/teacher/deleteTeacher.controller";
+import deleteTeacherClassroomController from "../controllers/teacher/deleteTeacherClassroom.controller";
+import listTeacherClassroomController from "../controllers/teacher/listTeacherClassroom.controller";
 import listTeachersController from "../controllers/teacher/listTechers.controller";
 import updateTeacherController from "../controllers/teacher/updateTeacher.controller";
+import updateTeacherClassroomController from "../controllers/teacher/updateTeacherClassroom.controller";
 import { authUser } from "../middlewares/authUser.middleware";
 import permissionUserMiddeware from "../middlewares/permissionUser.middleware";
 
@@ -18,4 +22,23 @@ teacherRoutes.delete(
   deleteTeacherController
 );
 
+teacherRoutes.post(
+  "/classroom",
+  authUser,
+  permissionUserMiddeware,
+  createTeacherClassroomController
+);
+teacherRoutes.patch(
+  "/classroom/:id",
+  authUser,
+  permissionUserMiddeware,
+  updateTeacherClassroomController
+);
+teacherRoutes.get("/classroom", listTeacherClassroomController);
+teacherRoutes.delete(
+  "/classroom/:id",
+  authUser,
+  permissionUserMiddeware,
+  deleteTeacherClassroomController
+);
 export default teacherRoutes;

@@ -37,7 +37,7 @@ export class TeachersRoom {
 
   @OneToOne(() => ClassRoom, { eager: true })
   @JoinColumn()
-  classRoom: ClassRoom[];
+  classRoom: ClassRoom;
 
   constructor() {
     if (!this.id) {

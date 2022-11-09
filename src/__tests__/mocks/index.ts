@@ -154,3 +154,10 @@ export const createSchoolGrade = {
   name: "1º ano - Ensino Medio",
   id_registration: "insira o id",
 };
+
+export const createTeacherClassroom = {
+  idTeacher: "insira o Id do professor",
+  idClassroom: "insira o Id da sala",
+  classSchedule: "12:30",
+  dayTheWeek: "seg",
+};

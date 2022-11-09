@@ -27,3 +27,15 @@ export interface ITeacherUpdate {
   email?: string;
   password?: string;
 }
+
+export interface ITeacherClassroom {
+  idTeacher: string;
+  idClassroom: string;
+  classSchedule: string;
+  dayTheWeek: string;
+}
+
+export interface ITeacherClassroomUpdate {
+  classSchedule?: string;
+  dayTheWeek?: string;
+}
