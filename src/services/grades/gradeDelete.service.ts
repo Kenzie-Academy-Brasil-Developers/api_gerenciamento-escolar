@@ -6,11 +6,7 @@ const grdDeleteService = async (id: string) => {
 
   const stdRepository = AppDataSource.getRepository(Grades);
 
-  const account = await stdRepository.findOne({
-    where: {
-      id: id,
-    },
-  });
+  const account = await stdRepository.findOneBy({id});
 
   if (!account) {
     throw new appError("Grade not found", 404);
