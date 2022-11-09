@@ -1,7 +1,7 @@
 import AppDataSource from "../../data-source";
 import { Students } from "../../entities/student.entity";
 import { appError } from "../../errors/appError";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 const updateStudentService = async (id: string, userData: any) => {
   const studentRepository = AppDataSource.getRepository(Students);
 
@@ -13,7 +13,7 @@ const updateStudentService = async (id: string, userData: any) => {
   await studentRepository.update(id, {
     name: userData.name,
     email: userData.email,
-    password: await hash(userData.password, 10),
+    age: userData.age,
     contact: userData.contact,
   });
 

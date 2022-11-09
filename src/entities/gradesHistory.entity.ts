@@ -1,21 +1,18 @@
 import {
   Entity,
-  Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  UpdateDateColumn,
-  CreateDateColumn,
   OneToOne,
   JoinColumn,
-  ManyToMany
+  ManyToMany,
+  OneToMany,
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
+import { Grades } from "./grades.entity";
 import { Professionals } from "./professionals.entity";
 import { SchoolGrades } from "./schoolGrades.entity";
-import { SchoolMaterials } from "./schoolMaterials.entity";
 import { Students } from "./student.entity";
-
 
 @Entity("gradesHistory")
 export class GradesHistory {
@@ -25,21 +22,18 @@ export class GradesHistory {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @ManyToMany(() => SchoolGrades, (sclGrd) => sclGrd.id)
-  schoolGrade: SchoolGrades
-
-  @ManyToOne(() => Students, (std) => std.schoolGrade)
-  student: Students[]
+  @ManyToOne(() => SchoolGrades, (sclGrd) => sclGrd.id, { eager: true })
+  schoolGrade: SchoolGrades;
 
   @OneToOne(() => Professionals, { eager: true })
   @JoinColumn()
   registration: Professionals;
 
   @ManyToOne(() => Students, (std) => std.id)
-  studentHistory: Students
+  student: Students;
 
-  @ManyToMany(() => SchoolMaterials, (mat) => mat.id)
-  grade: SchoolMaterials
+  @ManyToOne(() => Grades, (mat) => mat.id)
+  grade: Grades;
 
   constructor() {
     if (!this.id) {

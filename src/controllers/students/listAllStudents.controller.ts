@@ -1,9 +1,13 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import listAllStudentsService from "../../services/students/listAllStudents.services";
 
-const listAllStudentsController = async () => {
+const listAllStudentsController = async (
+  request: Request,
+  response: Response
+) => {
   const students = await listAllStudentsService();
-  return response.status(200).json(students);
+ 
+  return response.json(students);
 };
 
 export default listAllStudentsController;

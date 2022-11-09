@@ -1,7 +1,10 @@
 export interface IClassRoomRequest {
-    id: string;
-    name: string;
-    capacity: string;
-    createdAt: string;
-    updatedAt: string;
+  name: string;
+  capacity: number;
+  id_schoolGrade: string;
+}
+
+export interface IClassroomUpdate {
+  name?: string;
+  capacity?: number;
 }

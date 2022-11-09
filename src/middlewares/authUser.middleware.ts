@@ -18,15 +18,14 @@ export const authUser = (
 
   jwt.verify(
     token as string,
-    process.env.JWT_SECRET as string,
+    process.env.SECRET_KEY as string,
     (error: any, decoded: any) => {
       if (error) {
         return response.status(401).json({
           message: "Invalid token",
         });
       }
-      //Comentado pois ainda precisamos criar os services e controllers que geram o token
-      // request.user = { isAdm: decoded.isAdm, id: decoded.sub };
+      request.body.decodifiedToken = { email: decoded.email, id: decoded.sub };
 
       next();
     }

@@ -6,7 +6,7 @@ const deleteStudentController = async (
 ) => {
   const { id } = request.params;
   const deletedUser = await deleteStudentService(id);
-  return response.status(200);
+  return response.status(204).send();
 };
 
 export default deleteStudentController;

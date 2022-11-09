@@ -50,6 +50,7 @@ export const createTeacher = {
   name: "Professor 1",
   email: "professor1@gmail.com",
   password: "12345678",
+  isTeacher: true,
   id_address: "insira o id",
   id_registration: "insira o id",
 };
@@ -127,7 +128,7 @@ export const createAddress = {
 export const createClassroom = {
   name: "sala 1",
   capacity: 45,
-  id_registration: "insira o id",
+  id_schoolGrade: "insira o id",
 };
 
 export const updateClassroom = {
@@ -152,4 +153,11 @@ export const updateSchoolMaterials = {
 export const createSchoolGrade = {
   name: "1º ano - Ensino Medio",
   id_registration: "insira o id",
+};
+
+export const createTeacherClassroom = {
+  idTeacher: "insira o Id do professor",
+  idClassroom: "insira o Id da sala",
+  classSchedule: "12:30",
+  dayTheWeek: "seg",
 };

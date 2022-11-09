@@ -4,7 +4,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import {
   createProfessional,
-  createProfessionalIsNotAdm,
+  updateClassroom,
   loginProfessional,
   createClassroom,
   createTeacher,
@@ -28,24 +28,27 @@ describe("/classroom", () => {
       .catch((error) => {
         console.log(error);
       });
-
-    await request(app).post("/professionals").send(createProfessional);
-    await request(app).post("/professionals").send(createProfessionalIsNotAdm);
   });
 
   afterAll(async () => {
     await connection.destroy();
   });
+  let idProfessional = "";
+  let idProfessor = "";
+  let idSchoolGrade = "";
+
   /*--------------TESTES DA ROTA CLASSROOM /POST--------------*/
   test("POST /classroom -> should be able to create a classroom", async () => {
     const adressResponse = await request(app)
       .post("/address")
       .send(addressProfessional);
 
+    createProfessional.id_address = adressResponse.body.data.id;
     const createDirectorResponse = await request(app)
       .post("/professionals")
       .send(createProfessional);
-    createProfessional.id_address = adressResponse.body.data.id;
+
+    idProfessional = createDirectorResponse.body.data.id;
 
     const directorLoginResponse = await request(app)
       .post("/login")
@@ -55,56 +58,39 @@ describe("/classroom", () => {
       .post("/address")
       .send(addressStudent);
 
+    createSchoolGrade.id_registration = createDirectorResponse.body.id;
     const createSchGrade = await request(app)
-      .post("/schoolGrade/student")
+      .post("/schoolGrade")
       .send(createSchoolGrade)
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
-    createSchoolGrade.id_registration = createDirectorResponse.body.data.id;
-
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data}`);
+    idSchoolGrade = createSchGrade.body.data.id;
+    createClassroom.id_schoolGrade = createSchGrade.body.id;
     const createdClassroomResponse = await request(app)
       .post("/classroom")
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data}`)
       .send(createClassroom);
 
-    const creatStudent = await request(app)
-      .post("/professionals")
-      .send(createStudent)
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
-    createStudent.id_address = addressStudentResponse.body.data.id;
-    createStudent.id_schoolGrade = createSchGrade.body.data.id;
-    createStudent.id_classroom = createdClassroomResponse.body.data.id;
-    createStudent.id_registration = createDirectorResponse.body.data.id;
-
     expect(createdClassroomResponse.status).toBe(201);
-    expect(createdClassroomResponse.body.message).toHaveProperty(
+    expect(createdClassroomResponse.body.message).toBe(
       "classroom created successfully"
     );
     expect(createdClassroomResponse.body).toHaveProperty("data");
     expect(createdClassroomResponse.body.data).toHaveProperty("name");
     expect(createdClassroomResponse.body.data).toHaveProperty("capacity");
-    expect(createdClassroomResponse.body.data).toHaveProperty("id_schoolGrade");
     expect(createdClassroomResponse.body.data).toHaveProperty("id");
     expect(createdClassroomResponse.body.data).toHaveProperty("createdAt");
     expect(createdClassroomResponse.body.data).toHaveProperty("updatedAt");
   });
 
-  test("POST /classroom -> not be able to create a classroom without permission", async () => {
-    const response = await request(app)
-      .post("/classroom")
-      .send(createClassroom);
-    expect(response.body).toHaveProperty("message");
-    expect(response.status).toBe(403);
-  });
-
-  test("POST /classroom -> not be able to create a classroom with the same name", async () => {
+  test("POST /classroom -> not be able to create a classroom with same same", async () => {
     const adressResponse = await request(app)
       .post("/address")
       .send(addressProfessional);
 
+    createProfessional.id_address = adressResponse.body.id;
     const createDirectorResponse = await request(app)
       .post("/professionals")
       .send(createProfessional);
-    createProfessional.id_address = adressResponse.body.data.id;
 
     const directorLoginResponse = await request(app)
       .post("/login")
@@ -114,28 +100,30 @@ describe("/classroom", () => {
       .post("/address")
       .send(addressStudent);
 
+    createSchoolGrade.id_registration = createDirectorResponse.body.id;
     const createSchGrade = await request(app)
-      .post("/schoolGrade/student")
+      .post("/schoolGrade")
       .send(createSchoolGrade)
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
-    createSchoolGrade.id_registration = createDirectorResponse.body.data.id;
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data}`);
 
+    createClassroom.id_schoolGrade = createSchGrade.body.id;
     const createdClassroomResponse = await request(app)
       .post("/classroom")
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data}`)
       .send(createClassroom);
+
+    createStudent.id_address = addressStudentResponse.body.id;
+    createStudent.id_schoolGrade = createSchGrade.body.id;
+    createStudent.id_classroom = createdClassroomResponse.body.id;
+    createStudent.id_registration = createDirectorResponse.body.id;
 
     const creatStudent = await request(app)
       .post("/professionals")
       .send(createStudent)
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`);
-    createStudent.id_address = addressStudentResponse.body.data.id;
-    createStudent.id_schoolGrade = createSchGrade.body.data.id;
-    createStudent.id_classroom = createdClassroomResponse.body.data.id;
-    createStudent.id_registration = createDirectorResponse.body.data.id;
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data}`);
 
-    expect(createdClassroomResponse.body.message).toHaveProperty(
-      "there is already a room with the same name"
+    expect(createdClassroomResponse.body.message).toBe(
+      "Classroom already exists"
     );
     expect(createdClassroomResponse.status).toBe(400);
   });
@@ -146,17 +134,42 @@ describe("/classroom", () => {
     const response = await request(app).get("/classroom");
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toHaveProperty(
-      "search performed successfully"
-    );
     expect(Array.isArray(response.body.data)).toBe(true);
+    expect(response.body.message).toBe("search performed successfully");
   });
 
   test("GET /classroom/:id_teacher/teacher - should be search teacher's classroom", async () => {
+    const adressProfessor = await request(app)
+      .post("/address")
+      .send(addressTeacher);
+
+    const loginDirector = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+
+    createTeacher.id_address = adressProfessor.body.data.id;
+    createTeacher.id_registration = idProfessional;
+    const createProfessorResponse = await request(app)
+      .post("/teacher")
+      .send(createTeacher)
+      .set("Authorization", `Bearer ${loginDirector.body.data}`);
+    const idProfessor = createProfessorResponse.body.data.id;
+    const loginResponse = await request(app).post("/login").send(loginTeacher);
+
+    const response = await request(app)
+      .get(`/classroom/${createProfessorResponse.body.data.id}/teacher`)
+      .set("Authorization", `Bearer ${loginDirector.body.data}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("search performed successfully");
+    expect(response.body).toHaveProperty("data");
+  });
+
+  test("GET /classroom/:id_teacher/teacher - should not be able to search teacher's classroom with invalid token", async () => {
     const adressResponse = await request(app)
       .post("/address")
       .send(addressProfessional);
-
+    createProfessional.id_address = adressResponse.body.id;
     const adressProfessor = await request(app)
       .post("/address")
       .send(addressTeacher);
@@ -164,154 +177,86 @@ describe("/classroom", () => {
     const createDirectorResponse = await request(app)
       .post("/professionals")
       .send(createProfessional);
-    createProfessional.id_address = adressResponse.body.data.id;
-
+    const loginDirector = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+    createTeacher.id_address = adressProfessor.body.id;
+    createTeacher.id_registration = createDirectorResponse.body.id;
     const createProfessorResponse = await request(app)
       .post("/professionals")
       .send(createTeacher);
-
-    createTeacher.id_address = adressProfessor.body.data.id;
-    createTeacher.id_registration = createDirectorResponse.body.data.id;
 
     const loginResponse = await request(app).post("/login").send(loginTeacher);
 
     const response = await request(app)
-      .get(`/classroom/${createProfessorResponse.body.data.id}/teacher`)
-      .set("Authorization", `Bearer ${loginResponse.body.data.token}`);
-
-    expect(response.status).toBe(200);
-    expect(response.body.message).toHaveProperty(
-      "search performed successfully"
-    );
-    expect(response.body).toHaveProperty("data");
-  });
-
-  test("GET /classroom/:id_teacher/teacher - should not be able to search teacher's classroom without permission or token", async () => {
-    const createProfessorResponse = await request(app)
-      .post("/professionals")
-      .send(createTeacher);
-    const loginResponse = await request(app).post("/login").send(loginTeacher);
-    const response = await request(app).get(
-      `/classroom/${createProfessorResponse.body.data.id}/teacher`
-    );
-
+      .get(`/classroom/${createProfessorResponse.body.id}/teacher`)
+      .set("Authorization", `Bearer ${"tokenAleatorio"}`);
     expect(response.status).toBe(401);
-    expect(response.body.message).toHaveProperty(
-      "Invalid token or not have permission"
-    );
+    expect(response.body.message).toBe("Invalid token");
   });
 
   /**--------------TESTES DA ROTA CLASSROOM /update*--------------*/
 
   test("PATCH /classroom/:id -> should not be able to update a classroom without permission", async () => {
-    const simplePermissionProfessional = await request(app)
-      .post("/login")
-      .send(loginProfessionalIsNotAdm);
+    const loginProfessor = await request(app).post("/login").send(loginTeacher);
 
-    const directorLoginResponse = await request(app)
-      .post("/login")
-      .send(loginProfessional);
+    const updatedClassroom = await request(app).get("/classroom");
 
-    const classroomCreated = await request(app)
-      .post("/classroom")
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
-      .send(createClassroom);
-
-    const updateClassroom = await request(app).get("/classroom");
     const response = await request(app)
-      .patch(`/classroom/${updateClassroom.body.data[0].id}`)
-      .set(
-        "Authorization",
-        `Bearer ${simplePermissionProfessional.body.data.token}`
-      )
+      .patch(`/classroom/${updatedClassroom.body.data[0].id}`)
+      .set("Authorization", `Bearer ${loginProfessor.body.data}`)
       .send(updateClassroom);
 
-    expect(response.body.message).toHaveProperty(
-      "You must be logged in as admin professional"
-    );
     expect(response.status).toBe(401);
+    expect(response.body.message).toBe("permission denied, not adm");
   });
 
   test("PATCH /classroom/:id -> should not be able to update a classroom with invalid token", async () => {
-    const directorLoginResponse = await request(app)
-      .post("/login")
-      .send(loginProfessional);
-    await request(app)
-      .post("/classroom")
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
-      .send(createClassroom);
-    const updateClassroom = await request(app).get("/classroom");
+    const updatedClassroom = await request(app).get("/classroom");
+
     const response = await request(app)
-      .patch(`/classroom/${updateClassroom.body.data[0].id}`)
+      .patch(`/classroom/${updatedClassroom.body.data[0].id}`)
+      .set("Authorization", `Bearer token`)
       .send(updateClassroom);
 
-    expect(response.body.message).toHaveProperty("invalid token");
+    expect(response.body.message).toBe("Invalid token");
     expect(response.status).toBe(401);
   });
 
   test("PATCH /classroom/:id -> should be able to update a classroom", async () => {
-    const adressResponse = await request(app)
-      .post("/address")
-      .send(addressProfessional);
+    const loginDirector = await request(app)
+      .post("/login")
+      .send(loginProfessional);
 
-    const createDirectorResponse = await request(app)
-      .post("/professionals")
-      .send(createProfessional);
-    createProfessional.id_address = adressResponse.body.data.id;
-
-    const createSchGrade = await request(app)
-      .post("/schoolGrade/student")
-      .send(createSchoolGrade)
-      .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`);
-    createSchoolGrade.id_registration = createDirectorResponse.body.data.id;
-
-    const createdClassroomResponse = await request(app)
-      .post("/classroom")
-      .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`)
-      .send(createClassroom);
-
-    const updateClassroom = await request(app).get("/classroom");
+    const updatedClassroom = await request(app).get("/classroom");
 
     const response = await request(app)
-      .patch(`/classroom/${updateClassroom.body.data[0].id}`)
-      .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`)
+      .patch(`/classroom/${updatedClassroom.body.data[0].id}`)
+      .set("Authorization", `Bearer ${loginDirector.body.data}`)
       .send(updateClassroom);
 
-    expect(response.body.message).toHaveProperty(
-      "updated classroom successfully"
+    expect(response.body.message).toBe("updated classroom successfully");
+    expect(response.body.data.name).toBe(`${updateClassroom.name}`);
+    expect(response.body.data.capacity).toBe(
+      parseInt(`${updateClassroom.capacity}`)
     );
     expect(response.status).toBe(200);
   });
 
   /*--------------TESTES DA ROTA CLASSROOM /delete-----------------*/
 
-  test("DELETE /classroom/:id -> should be able to delete a classroom", async () => {
-    const adressResponse = await request(app)
-      .post("/address")
-      .send(addressProfessional);
-
-    const createDirectorResponse = await request(app)
-      .post("/professionals")
-      .send(createProfessional);
-    createProfessional.id_address = adressResponse.body.data.id;
-
-    const createSchGrade = await request(app)
-      .post("/schoolGrade/student")
-      .send(createSchoolGrade)
-      .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`);
-    createSchoolGrade.id_registration = createDirectorResponse.body.data.id;
-
-    const createdClassroomResponse = await request(app)
-      .post("/classroom")
-      .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`)
-      .send(createClassroom);
+  test("/DELETE /classroom/:id -> should be able to delete a classroom", async () => {
+    const directorLoginResponse = await request(app)
+      .post("/login")
+      .send(loginProfessional);
 
     const deleteClassroom = await request(app).get("/classroom");
+    console.log(deleteClassroom.body, directorLoginResponse.body, "test2");
     const response = await request(app)
       .delete(`/classroom/${deleteClassroom.body.data[0].id}`)
-      .set("Authorization", `Bearer ${createDirectorResponse.body.data.token}`);
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data}`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(204);
   });
 
   test("DELETE /classroom/:id -> should not be able to delete a classroom without permission", async () => {
@@ -320,7 +265,7 @@ describe("/classroom", () => {
       .send(loginProfessional);
     await request(app)
       .post("/classroom")
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data}`)
       .send(createClassroom);
 
     const simplePermissionProfessional = await request(app)
@@ -331,14 +276,9 @@ describe("/classroom", () => {
 
     const response = await request(app)
       .delete(`/classroom/${deleteClassroom.body.data[0].id}`)
-      .set(
-        "Authorization",
-        `Bearer ${simplePermissionProfessional.body.data.token}`
-      );
+      .set("Authorization", `Bearer ${simplePermissionProfessional.body.data}`);
 
-    expect(response.body.message).toHaveProperty(
-      "you must be logged as a professional adm"
-    );
+    expect(response.body.message).toBe("Invalid token");
     expect(response.status).toBe(401);
   });
 
@@ -346,9 +286,10 @@ describe("/classroom", () => {
     const directorLoginResponse = await request(app)
       .post("/login")
       .send(loginProfessional);
+    createClassroom.id_schoolGrade = directorLoginResponse.body.id;
     await request(app)
       .post("/classroom")
-      .set("Authorization", `Bearer ${directorLoginResponse.body.data.token}`)
+      .set("Authorization", `Bearer ${directorLoginResponse.body.data}`)
       .send(createClassroom);
 
     const deleteClassroom = await request(app).get("/classroom");
@@ -356,7 +297,7 @@ describe("/classroom", () => {
       `/classroom/${deleteClassroom.body.data[0].id}`
     );
 
-    expect(response.body.message).toHaveProperty("invalid or missing token");
+    expect(response.body.message).toBe("Invalid token");
     expect(response.status).toBe(401);
   });
 });
