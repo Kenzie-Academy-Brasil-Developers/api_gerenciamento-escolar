@@ -14,7 +14,12 @@ const teacherRoutes = Router();
 
 teacherRoutes.post("", authUser, createTeacherController);
 teacherRoutes.get("", authUser, listTeachersController);
-teacherRoutes.patch("/:id", authUser, updateTeacherController);
+teacherRoutes.patch(
+  "/:id",
+  authUser,
+  permissionUserMiddeware,
+  updateTeacherController
+);
 teacherRoutes.delete(
   "/:id",
   authUser,
