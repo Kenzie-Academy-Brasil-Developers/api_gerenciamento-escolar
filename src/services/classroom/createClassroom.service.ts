@@ -14,9 +14,10 @@ export const createClassroomService = async ({
 
   const findClassroom = await classroomRepository.findOneBy({ name: name });
 
-  const findSchoolGrade = await schGrdRepository.findOneBy({
+  const findSchoolGrade = await schGrdRepository.findBy({
     id: id_schoolGrade,
   });
+
   if (findClassroom) {
     throw new appError("Classroom already exists", 400);
   }
@@ -25,9 +26,9 @@ export const createClassroomService = async ({
   }
 
   const createdClassroom = classroomRepository.create({
-    name,
-    capacity,
-    schoolGrade: findSchoolGrade,
+    name: name,
+    capacity: capacity,
+    schoolGrade: findSchoolGrade[0],
   });
 
   await classroomRepository.save(createdClassroom);

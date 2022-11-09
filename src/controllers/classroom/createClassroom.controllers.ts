@@ -12,11 +12,12 @@ export const createClassroomController = async (
   res: Response
 ) => {
   const classRoom: IClassRoomRequest = req.body;
-
+  const { id_schoolGrade } = req.body;
   const createdClassroom = await createClassroomService(classRoom);
+
   return res.status(201).json({
     message: "classroom created successfully",
-    data: createdClassroom,
+    data: { ...createdClassroom, id_schoolGrade },
   });
 };
 
