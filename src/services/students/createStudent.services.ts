@@ -3,7 +3,7 @@ import { Students } from "../../entities/student.entity";
 import { Address } from "../../entities/address.entity";
 import { ClassRoom } from "../../entities/classRoom.entity";
 import { appError } from "../../errors/appError";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 import { Professionals } from "../../entities/professionals.entity";
 import { SchoolGrades } from "../../entities/schoolGrades.entity";
 
@@ -46,6 +46,7 @@ const createStudentService = async (userData: any) => {
   const professionalExists = await professionalsRepository.findOneBy({
     id: userData.id_registration,
   });
+  console.log("professionalLOG", professionalExists);
   if (!professionalExists) {
     throw new appError("invalid registration", 401);
   }
@@ -68,8 +69,10 @@ const createStudentService = async (userData: any) => {
     schoolGrade: schoolGradeExists,
     address: addressExists,
     classRoom: classRoomExists,
-    registration: [professionalExists],
+    registration: professionalExists,
+    email: userData.email,
   });
+  await studentRepository.save(student);
 
   return student;
 };

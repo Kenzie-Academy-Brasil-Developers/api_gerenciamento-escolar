@@ -120,7 +120,7 @@ describe("Testing the student routes", () => {
   test("Should be able to login as a student", async () => {
     const response = await await request(app).post("/login").send(loginStudent);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
     expect(response.body.data).toHaveProperty("token");
   });
 });

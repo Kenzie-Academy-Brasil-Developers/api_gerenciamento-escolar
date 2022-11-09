@@ -5,8 +5,12 @@ const listAllStudentsService = async () => {
   const studentsRepository = AppDataSource.getRepository(Students);
 
   const students = await studentsRepository.find();
-  console.log("teste do teste", students);
-  return students;
+
+  return {
+    status: 200,
+    message: "search performed successfully",
+    data: students,
+  };
 };
 
 export default listAllStudentsService;

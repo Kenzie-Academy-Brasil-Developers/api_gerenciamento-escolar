@@ -14,6 +14,7 @@ import { v4 as uuid } from "uuid";
 import { SchoolGrades } from "./schoolGrades.entity";
 import { Address } from "./address.entity";
 import { Teachers } from "./teachers.entity";
+import { Students } from "./student.entity";
 
 @Entity("professionals")
 export class Professionals {
@@ -57,9 +58,12 @@ export class Professionals {
   @OneToMany(() => SchoolGrades, (schlGrd) => schlGrd.registration)
   registration: SchoolGrades[];
 
-  @ManyToOne(() => Address, (address) => address.id, { eager: true })
+  @ManyToOne(() => Address, (address) => address.id)
   id_address: Address;
 
   @OneToMany(() => Teachers, (teachers) => teachers.id_registration)
   id_teacher: Teachers;
+
+  @OneToMany(() => Students, (students) => students.registration)
+  id_student: Students;
 }
