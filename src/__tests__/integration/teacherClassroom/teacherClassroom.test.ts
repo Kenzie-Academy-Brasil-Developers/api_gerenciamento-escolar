@@ -188,7 +188,9 @@ describe("Test TecaherClassroom routes", () => {
       .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
       .send(createClassroom);
 
-    const getTeacherClassroom = await request(app).get("/teacher/classroom");
+    const getTeacherClassroom = await request(app).get(
+      "/teacher/classroom/test"
+    );
 
     createTeacherClassroom.classSchedule = "14:00";
     createTeacherClassroom.dayTheWeek = "Qua";
@@ -249,7 +251,9 @@ describe("Test TecaherClassroom routes", () => {
       .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`)
       .send(createClassroom);
 
-    const getTeacherClassroom = await request(app).get("/teacher/classroom");
+    const getTeacherClassroom = await request(app).get(
+      "/teacher/classroom/test"
+    );
 
     createTeacherClassroom.classSchedule = "15:00";
     createTeacherClassroom.dayTheWeek = "Sex";
@@ -259,5 +263,36 @@ describe("Test TecaherClassroom routes", () => {
 
     expect(response.status).toBe(401);
     expect(response.body).toHaveProperty("message");
+  });
+
+  test("DELETE -  teacher/classroom - Must not be able to delete a teacher classroom without authorization", async () => {
+    loginProfessional.email = "professional6@gmail.com";
+    const professionalLoginResponse = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+    const getTeacherClassroom = await request(app).get(
+      "/teacher/classroom/test"
+    );
+    const response = await request(app).delete(
+      `/teacher/classroom/${getTeacherClassroom.body[0].id}`
+    );
+
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty("message");
+  });
+
+  test("DELETE -  teacher/classroom - Must be able to delete a teacher classroom", async () => {
+    loginProfessional.email = "professional6@gmail.com";
+    const professionalLoginResponse = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+    const getTeacherClassroom = await request(app).get(
+      "/teacher/classroom/test"
+    );
+    const response = await request(app)
+      .delete(`/teacher/classroom/${getTeacherClassroom.body[0].id}`)
+      .set("Authorization", `Bearer ${professionalLoginResponse.body.data}`);
+
+    expect(response.status).toBe(204);
   });
 });
