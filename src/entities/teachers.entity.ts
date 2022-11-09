@@ -48,7 +48,9 @@ export class Teachers {
   @OneToMany(() => TeachersRoom, (room) => room.teacher)
   teacher: TeachersRoom[];
 
-  @ManyToOne(() => Professionals, (professionals) => professionals.id)
+  @ManyToOne(() => Professionals, (professionals) => professionals.id, {
+    eager: true,
+  })
   id_registration: Professionals[];
 
   @ManyToOne(() => Address, (address) => address.id, { eager: true })
