@@ -44,7 +44,7 @@ const histGrdCreateService = async (data: IGradesHistoryRequest) => {
   return {
     status: 201,
     message: "Grades add successfully",
-    data: ret,
+    data: ret.grade,
   };
 };
 

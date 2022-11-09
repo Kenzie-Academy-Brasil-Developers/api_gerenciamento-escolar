@@ -5,7 +5,10 @@ import { GradesHistory } from "../../entities/gradesHistory.entity";
 const listHistPropService = async (id: string) => {
   const histRepository = AppDataSource.getRepository(GradesHistory);
     
-  const retHist = await histRepository.find({
+  const retHist = await histRepository.findOne({
+    where: {
+      id: id
+    },
     relations: {
       grade: true
     }
@@ -15,8 +18,12 @@ const listHistPropService = async (id: string) => {
   // if(!history){
   // throw new appError("Invalid student", 404)
   // }
-console.log(retHist)
-  return retHist;
+
+  return {
+    status: 201,
+    message: "Grades add successfully",
+    data: retHist,
+  };
 };
 
 export default listHistPropService;

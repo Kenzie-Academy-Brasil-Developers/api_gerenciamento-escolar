@@ -29,7 +29,7 @@ export class GradesHistory {
   @JoinColumn()
   registration: Professionals;
 
-  @ManyToOne(() => Students, (std) => std.id)
+  @ManyToOne(() => Students, (std) => std.id, { eager: true })
   student: Students
 
   @ManyToOne(() => Grades, (mat) => mat.id, { eager: true })
