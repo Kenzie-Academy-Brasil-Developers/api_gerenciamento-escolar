@@ -1,9 +1,9 @@
-import { hashSync } from "bcryptjs";
 import AppDataSource from "../../data-source";
 import { Professionals } from "../../entities/professionals.entity";
 import { Students } from "../../entities/student.entity";
 import { Teachers } from "../../entities/teachers.entity";
 import { appError } from "../../errors/appError";
+import { hashSync } from "bcryptjs";
 
 const createProfessionalService = async (data: Professionals) => {
   const {

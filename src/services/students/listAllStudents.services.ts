@@ -4,9 +4,13 @@ import { Students } from "../../entities/student.entity";
 const listAllStudentsService = async () => {
   const studentsRepository = AppDataSource.getRepository(Students);
 
-  const students = studentsRepository.find();
+  const students = await studentsRepository.find();
 
-  return students;
+  return {
+    status: 200,
+    message: "search performed successfully",
+    data: students,
+  };
 };
 
 export default listAllStudentsService;

@@ -8,6 +8,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Address } from "./address.entity";
@@ -41,8 +42,8 @@ export class Students {
   @Column()
   contact: string;
 
-  @Column()
-  isPermission: boolean;
+  @Column({ default: false })
+  isTeacher: boolean;
 
   @Column()
   isActive: boolean = true;
@@ -64,9 +65,10 @@ export class Students {
   @JoinColumn()
   address: Address;
 
-  @OneToOne(() => Professionals, { eager: true })
-  @JoinColumn()
-  registration: Professionals[];
+  @ManyToOne(() => Professionals, (professionals) => professionals.id, {
+    eager: true,
+  })
+  registration: Professionals;
 
   @OneToMany(() => SchoolGrades, (grd) => grd.name)
   schoolGrade: SchoolGrades;

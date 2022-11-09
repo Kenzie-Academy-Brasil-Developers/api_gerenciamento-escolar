@@ -1,7 +1,7 @@
 import AppDataSource from "../../data-source";
 import { Students } from "../../entities/student.entity";
 import { appError } from "../../errors/appError";
-import { hash } from "bcryptjs";
+import { hash } from "bcrypt";
 const updateStudentService = async (id: string, userData: any) => {
   const studentRepository = AppDataSource.getRepository(Students);
 

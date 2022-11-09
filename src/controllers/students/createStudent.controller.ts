@@ -7,7 +7,13 @@ const createStudentController = async (
 ) => {
   const userData = request.body;
   const student = await createStudentService(userData);
-  return response.status(201).json(student);
+  return response
+    .status(201)
+    .json({
+      status: 201,
+      message: "registered student successfully",
+      data: student,
+    });
 };
 
 export default createStudentController;
