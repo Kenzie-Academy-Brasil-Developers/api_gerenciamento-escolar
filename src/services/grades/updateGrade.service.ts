@@ -2,9 +2,10 @@ import AppDataSource from "../../data-source";
 import { Students } from "../../entities/student.entity";
 import { IHistoryUpdate } from "../../interfaces/schoolGrades";
 import { appError } from "../../errors/appError";
+import { Grades } from "../../entities/grades.entity";
 
 const gradeUpdateService = async (data: IHistoryUpdate, id: string) => {
-  const stdRepository = AppDataSource.getRepository(Students);
+  const stdRepository = AppDataSource.getRepository(Grades);
   const findStdt = await stdRepository.findOneBy({
     id,
   });
@@ -16,22 +17,22 @@ const gradeUpdateService = async (data: IHistoryUpdate, id: string) => {
     id,
     school_subject: data.school_subject
       ? data.school_subject
-      : findStdt.gradeHistory.grade.school_subject,
+      : findStdt.school_subject,
     firstGrade: data.firstGrade
       ? data.firstGrade
-      : findStdt.gradeHistory.grade.firstGrade,
+      : findStdt.firstGrade,
     secondGrade: data.secondGrade
       ? data.secondGrade
-      : findStdt.gradeHistory.grade.secondGrade,
+      : findStdt.secondGrade,
     thirdGrade: data.thirdGrade
       ? data.thirdGrade
-      : findStdt.gradeHistory.grade.thirdGrade,
+      : findStdt.thirdGrade,
     fourthGrade: data.fourthGrade
       ? data.fourthGrade
-      : findStdt.gradeHistory.grade.fourthGrade,
+      : findStdt.fourthGrade,
     absences: data.absences
       ? data.absences
-      : findStdt.gradeHistory.grade.absences,
+      : findStdt.absences,
   });
 
   const resultStd = await stdRepository.findOneBy({

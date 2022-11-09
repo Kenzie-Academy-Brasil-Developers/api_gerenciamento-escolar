@@ -23,18 +23,18 @@ export class GradesHistory {
   readonly id: string;
 
   @ManyToOne(() => SchoolGrades, (sclGrd) => sclGrd.id, { eager: true })
-  schoolGrade: SchoolGrades
+  schoolGrade: SchoolGrades;
 
   @OneToOne(() => Professionals, { eager: true })
   @JoinColumn()
   registration: Professionals;
 
   @ManyToOne(() => Students, (std) => std.id)
-  student: Students
+  student: Students;
 
-  @ManyToOne(() => Grades, (mat) => mat.id, { eager: true })
-  grade: Grades
-  
+  @ManyToOne(() => Grades, (mat) => mat.id)
+  grade: Grades;
+
   constructor() {
     if (!this.id) {
       this.id = uuid();
