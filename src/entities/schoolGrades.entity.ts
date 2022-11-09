@@ -8,14 +8,13 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
-  OneToMany
+  OneToMany,
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { ClassRoom } from "./classRoom.entity";
 import { GradesHistory } from "./gradesHistory.entity";
 import { Professionals } from "./professionals.entity";
 import { Students } from "./student.entity";
-
 
 @Entity("schoolGrades")
 export class SchoolGrades {
@@ -28,28 +27,28 @@ export class SchoolGrades {
   @Column({ length: 50 })
   name: string;
 
-  @CreateDateColumn({type: "date"})
+  @CreateDateColumn({ type: "date" })
   createdAt: string;
 
-  @UpdateDateColumn({type: "date"})
+  @UpdateDateColumn({ type: "date" })
   updatedAt: string;
 
   @ManyToOne(() => ClassRoom, (clsRm) => clsRm.name)
-  nameClass: ClassRoom
+  nameClass: ClassRoom;
 
   @OneToOne(() => Professionals, { eager: true })
   @JoinColumn()
   registration: Professionals;
 
   @ManyToOne(() => Students, (std) => std.id)
-  student: Students
+  student: Students;
 
   @OneToMany(() => GradesHistory, (sclGrd) => sclGrd.schoolGrade)
-  schoolGrade: GradesHistory
+  schoolGrade: GradesHistory;
 
   constructor() {
     if (!this.id) {
-        this.id = uuid();
+      this.id = uuid();
     }
   }
 }
