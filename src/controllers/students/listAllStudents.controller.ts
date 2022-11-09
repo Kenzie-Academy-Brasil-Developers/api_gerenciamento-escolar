@@ -6,8 +6,7 @@ const listAllStudentsController = async (
   response: Response
 ) => {
   const students = await listAllStudentsService();
-  console.log("students console", students);
-  console.log("responseLog", response);
+ 
   return response.json(students);
 };
 

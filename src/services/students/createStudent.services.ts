@@ -46,7 +46,7 @@ const createStudentService = async (userData: any) => {
   const professionalExists = await professionalsRepository.findOneBy({
     id: userData.id_registration,
   });
-  console.log("professionalLOG", professionalExists);
+  
   if (!professionalExists) {
     throw new appError("invalid registration", 401);
   }

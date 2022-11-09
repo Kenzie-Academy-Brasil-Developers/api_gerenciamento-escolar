@@ -9,8 +9,13 @@ import permissionUserMiddeware from "../middlewares/permissionUser.middleware";
 const router = Router();
 
 router.post("", authUser, permissionUserMiddeware, createStudentController);
-router.get("", authUser, listAllStudentsController);
-router.patch("/:id", authUser, updateStudentController);
+router.get("", authUser, permissionUserMiddeware, listAllStudentsController);
+router.patch(
+  "/:id",
+  authUser,
+  permissionUserMiddeware,
+  updateStudentController
+);
 router.delete(
   "/:id",
   authUser,
