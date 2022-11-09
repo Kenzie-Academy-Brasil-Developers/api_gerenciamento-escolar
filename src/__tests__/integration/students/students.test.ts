@@ -74,6 +74,7 @@ describe("Testing the student routes", () => {
 
     const response = await request(app)
       .post("/students")
+      .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`)
       .send({
         ...createStudent,
         id_address: responseAddress.body.data.id,
@@ -92,35 +93,55 @@ describe("Testing the student routes", () => {
       .post("/login")
       .send(loginProfessional);
 
-    console.log("testando", responseLoginProfessional.body.data);
-    const response = await request(app).get("/students");
-    // .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`);
+    const response = await request(app)
+      .get("/students")
+      .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`);
 
     expect(response.status).toBe(200);
     expect(response.body.data).toHaveProperty("map");
   });
-
+  test("Should be able to login as a student", async () => {
+    const response = await await request(app).post("/login").send(loginStudent);
+  
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("data");
+  });
   test("Should be abre to DELETE a student", async () => {
-    const response = await request(app).delete("/student/:id");
-    expect(response.status).toBe(200);
+    const responseLoginProfessional = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+
+    const responseStudent = await request(app)
+      .get("/students")
+      .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`);
+
+    const response = await request(app)
+      .delete(`/students/${responseStudent.body.data[0].id}`)
+      .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`);
+    expect(response.status).toBe(204);
   });
 
   test("Should be able to update a student", async () => {
     const { name, age, email, contact, password } = updateStudent;
+    const responseLoginProfessional = await request(app)
+      .post("/login")
+      .send(loginProfessional);
+
+    const responseStudent = await request(app)
+      .get("/students")
+      .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`);
+
     const response = await request(app)
-      .patch("/student/:id")
+      .patch(`/students/${responseStudent.body.data[0].id}`)
+      .set("Authorization", `Bearer ${responseLoginProfessional.body.data}`)
       .send(updateStudent);
 
+    
+
     expect(response.status).toBe(200);
-    expect(response.body.data).toEqual(
-      expect.objectContaining({ name, age, email, contact, password })
-    );
-  });
-
-  test("Should be able to login as a student", async () => {
-    const response = await await request(app).post("/login").send(loginStudent);
-
-    expect(response.status).toBe(201);
-    expect(response.body.data).toHaveProperty("token");
+    expect(response.body.name).toBe(updateStudent.name);
+    expect(response.body.email).toBe(updateStudent.email);
+    expect(response.body.contact).toBe(updateStudent.contact);
+    expect(response.body.age).toBe(`${updateStudent.age}`);
   });
 });

@@ -13,7 +13,7 @@ const updateStudentService = async (id: string, userData: any) => {
   await studentRepository.update(id, {
     name: userData.name,
     email: userData.email,
-    password: await hash(userData.password, 10),
+    age: userData.age,
     contact: userData.contact,
   });
 

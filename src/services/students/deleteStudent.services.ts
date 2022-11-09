@@ -8,7 +8,7 @@ const deleteStudentService = async (id: string) => {
   const student = await studentRepository.findOne({ where: { id } });
 
   if (!student) {
-    throw new appError("invalid student");
+    throw new appError("invalid student", 404);
   }
 
   await studentRepository.update(id, { isActive: false });
