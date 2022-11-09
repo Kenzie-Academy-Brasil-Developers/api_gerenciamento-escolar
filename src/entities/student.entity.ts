@@ -57,7 +57,7 @@ export class Students {
   @OneToMany(() => TeachersRoom, (room) => room.teacher)
   teacher: TeachersRoom[];
 
-  @OneToOne(() => ClassRoom, { eager: true })
+  @OneToOne(() => ClassRoom)
   @JoinColumn()
   classRoom: ClassRoom;
 
@@ -65,9 +65,7 @@ export class Students {
   @JoinColumn()
   address: Address;
 
-  @ManyToOne(() => Professionals, (professionals) => professionals.id, {
-    eager: true,
-  })
+  @ManyToOne(() => Professionals, (professionals) => professionals.id)
   registration: Professionals;
 
   @OneToMany(() => SchoolGrades, (grd) => grd.name)
